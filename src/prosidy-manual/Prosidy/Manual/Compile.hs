@@ -14,16 +14,10 @@ import           Prosidy.Manual.Slug            ( Slug(..)
                                                 , slug
                                                 )
 import           Control.Lens.Operators
-import           System.FilePath                ( (-<.>)
-                                                , makeRelative
-                                                , takeDirectory
-                                                , takeBaseName
-                                                )
 import           Control.Applicative            ( (<|>) )
 
 import qualified Prosidy.Manual.TableOfContents
                                                as TOC
-import qualified Prosidy.Manual.Slug           as Slug
 import           Data.Foldable                  ( for_ )
 
 import           Data.Maybe                     ( fromMaybe )
@@ -33,9 +27,6 @@ import           Text.Blaze.Html.Renderer.Utf8  ( renderHtml )
 import qualified Prosidy.Compile               as C
 import qualified Data.ByteString.Lazy          as LBS
 import qualified Data.Text                     as Text
-import qualified Data.Map.Strict               as Map
-import           Numeric.Natural                ( Natural )
-import           Control.Monad                  ( unless )
 import qualified Data.Char                     as Char
 
 type Html a = C.Product a Manual H.Html

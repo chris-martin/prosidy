@@ -1,8 +1,6 @@
 {-# LANGUAGE DeriveAnyClass, DeriveGeneric, DerivingStrategies, GeneralisedNewtypeDeriving, OverloadedStrings #-}
 module Prosidy.Manual.Slug (Slug, slug, slugText, slugIndex, FileSlug(..)) where
 
-import           Prosidy
-
 import           Data.Text                      ( Text )
 import qualified Data.Text                     as Text
 import qualified Data.Char                     as Char
