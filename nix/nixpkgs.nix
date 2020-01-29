@@ -8,9 +8,9 @@ args:
 
 let
   static     = builtins.getEnv "NIX_STATIC" != "";
-  url        = "https://github.com/nh2/nixpkgs/archive/${commit}.tar.gz";
-  commit     = "11aa987ea5b5a593c9ca7a38b391804959f905e5";
-  sha256     = "1wns6051fxpgmszyxjvk7020zzhljjxqxkrnqmyd3b6fah7q4vny";
+  url        = "https://github.com/NixOS/nixpkgs/archive/${commit}.tar.gz";
+  commit     = "e59dcf8ccec439f54dc52ffd5832610fc3f6c9c2";
+  sha256     = "1ky79vczvf2sv6gk234i2m4vsxz1wpkh69gm8c7s1qwyawar9vjq";
   nixpkgs    = import tarball args;
   tarball    = builtins.fetchTarball { inherit url sha256; };
 in
