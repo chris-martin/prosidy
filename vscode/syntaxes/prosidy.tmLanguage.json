@@ -11,7 +11,11 @@
             },
             "patterns": [
                 {"include": "#comment"},
-                {"include": "#header-metadata"}
+                {"include": "#header-metadata"},
+                {
+                    "match": "^#!.*$",
+                    "name": "comment.line.hashbang.prosidy"
+                }
             ]
         },
         { "include": "#block-tag" },

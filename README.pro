@@ -33,6 +33,12 @@ We'd recommend you have both installed before building,
 although it may work without both.
 
 #-h{Changelog}
+#-h+{2020-01-28}
+#-list:
+  #-item{Fixed a few parser errors, specifically around comments.}
+  #-item{Added support for the first line of a Prosidy file to be a hash-bang (in both VSCode and the core parser)}
+#:
+
 #-h+{2020-01-24}
 #-list:
   #-item{Combined multiple Cabal projects into a super-Cabal file.}

@@ -25,6 +25,7 @@ let
                 pkgs.binutils.bintools
                 pkgs.fswatch
                 self.ghc
+                pkgs.patchelf
 	        ];
 	    };
 
@@ -35,7 +36,6 @@ let
             blaze-html
             cabal-install
             generic-lens
-            ghc
             lens
             mmorph
             megaparsec
