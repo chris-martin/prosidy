@@ -1,5 +1,8 @@
 title:     Language Specification
 toc-title: Spec
+lang:      en
+created:   2020-01-05
+updated:   2020-02-02
 ---
 
 Prosidy is a small language for composing documents using plain text.
@@ -7,7 +10,7 @@ Its syntax is simple with the hope that it will be pleasent to write with
 as well as straightforward to customize and specialize to the user's needs.
 
 #-note[level='caution']:
-  This is a provisional specification.
+  This is a provisional and incomplete specification.
 
   Until it is finalized, be prepared for the specification to change.
 
@@ -87,6 +90,10 @@ as well as straightforward to customize and specialize to the user's needs.
     Prosidy supports escaping these symbols anyway in order to reduce the burden of remembering 
     exactly which symbols are special. They are:
 
+    #-list:
+      #-item{both #chars[rep='[']{left} and #chars[rep=']']{right} brackets}
+    #:
+
     Some control characters are also used by Prosidy syntax, 
     and have corresponding escape sequences for literal use.
 
@@ -110,7 +117,7 @@ as well as straightforward to customize and specialize to the user's needs.
     continues until #ref[section='Line breaks']{the end of the line}.
 
     #-spec[test='test.prosidy.comment']:
-      Comments can appoear in any #ref[section='Tags & contexts']{context}
+      Comments can appear in any #ref[section='Tags & contexts']{context}
       #i{except} for #ref[section='Literal context']{literal contexts}
       (where they are included as text)
       and on the same line as the #term{document divider}.
@@ -152,6 +159,8 @@ Hello, world!   ## Maybe a bit cliché?
   #-section[title='The body']:
     The #def{body} begins on the first line proceeding the #term{header},
     and continues until the end of the document.
+
+    The body starts the outermost #ref[section='Block context']{block context}.
   #:
 
   #-section[title='The divider']:
@@ -210,15 +219,34 @@ but #style[bold, color='#0F0']{this text is blue and bold}.
 #:
 
 #-section[title='Tags & contexts']:
-  A #def{tag} is a #term{key} used to annotate a region of a document.
+  A #def{tag} is used to annotate a region of a document.
+  Each tag is named by a #term{key} and optionally has #term{metadata} associated with it.
+
+  There are three different kinds of tags: #i{block}, #i{inline}, and #i{literal}.
+  All three types of tags have the structure, but allow different elements as children—
+  we refer to the differeing inner structures as #def[lemma='context']{contexts}.
+
+  A #def{sigil} (a symbolic prefix) is used to differentiate between the three types of tags:
+
+  #-list:
+    #-item{#lit{\#-}, which opens a #ref[section='Block context']{block} tag.}
+    #-item{#lit{\#=}, which opens a #ref[section='Literal context']{literal} tag.}
+    #-item{#lit{\#}, which opens an #ref[section='Inline context']{inline} tag.}
+  #:
 
   #-section[title='Block context']:
+    The #def{block context} contains #i{structural} document markup,
+    rather than textual content.
   #:
 
   #-section[title='Inline context']:
+    The #def{inline context} contains #i{textual} markup,
+    such as text and styling of text.
   #:
 
   #-section[title='Literal context']:
+    The #def{literal context} contains unstructured text 
+    that is opaque to Prosidy.
   #:
 #:
 

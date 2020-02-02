@@ -2,8 +2,9 @@ title:     Prosidy
 subtitle:  A minimal language for writing.
 toc-title: Home
 created:   2020-01-05
-updated:   2020-01-18
+updated:   2020-02-02
 priority:  10
+lang:      en
 ---
 
 Prosidy is a small language for writing documents in plain text.
@@ -16,6 +17,39 @@ and has only a few rules to keep in mind when writing.
 Like #link[url='https://www.w3.org/XML/']{XML}, Prosidy is #i{extensible}:
 it doesn't have any preconceived ideas about the what you write,
 letting the author tailor the language presicely to their use case.
+
+
+#-section[title='Syntax sample']:
+  #=src[lang='prosidy']:endsrc
+recipe: A simple roux
+---
+
+#-ingredients:
+  #-item[amount='1/8', unit='cup']{flour}
+  #-item[amount='1/8', unit='cup']{butter}
+#:
+
+#-implements:
+  #-item{fry pan}
+  #-item{wooden spoon}
+#:
+
+#-step:
+  Add the #item{butter} to the #item{fry pan}.
+  Melt over #heat{medium-low} heat.
+#:
+
+#-step:
+  Add the flour to the melted butter.
+  Stir constantly in a figure-eight motion.
+#:
+
+#-step:
+  Stop stiring when the roux is the desired color.
+  The darker brown the roux is, the stronger the flavor of the dish.
+#:
+  #:endsrc
+#:
 
 #-section[title: 'Get Prosidy']:
   #-note[level: 'important']:
