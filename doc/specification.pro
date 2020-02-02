@@ -213,8 +213,10 @@ but #style[bold, color='#0F0']{this text is blue and bold}.
   A #def{tag} is a #term{key} used to annotate a region of a document.
 
   #-section[title='Block context']:
+  #:
 
   #-section[title='Inline context']:
+  #:
 
   #-section[title='Literal context']:
   #:
