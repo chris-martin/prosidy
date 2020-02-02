@@ -14,7 +14,7 @@ as well as straightforward to customize and specialize to the user's needs.
   Additionally, Prosidy tooling is still in development 
   and may not conform to all parts of this specification,
   although any such cases are considered errors and should be reported to
-  #link[url='mailto:ask@prosidy.org']{ask@prosidy.org}.
+  #link[url='mailto:hello@prosidy.org']{hello@prosidy.org}.
 #:
 
 #-section[title='Base Syntax']:
@@ -119,7 +119,7 @@ as well as straightforward to customize and specialize to the user's needs.
     This document consists only of the text “hello, world”;
     the comment is stripped while parsing.
 
-    #=src[lang='pro']:
+    #=src[lang='prosidy']:
 ---
 Hello, world!   ## Maybe a bit cliché?
     #:
@@ -154,7 +154,7 @@ Hello, world!   ## Maybe a bit cliché?
     and continues until the end of the document.
   #:
 
-  #-section[title='The divide']:
+  #-section[title='The divider']:
     The #term{header} and the #term{body} are separated by the #def{document divider}—
     a #term{line} containing #chars[rep='---']{three consecutive hyphens} and nothing else.
     
@@ -163,7 +163,7 @@ Hello, world!   ## Maybe a bit cliché?
       A #term{document} with a completely empty #term{header} and #term{body}
       looks like this:
 
-      #=src[lang='pro']:
+      #=src[lang='prosidy']:
 ---
       #:
     #:
@@ -181,7 +181,7 @@ Hello, world!   ## Maybe a bit cliché?
     #term[lemma='property']{Properties} are #i{boolean} attributes— they're either #i{on} or #i{off}.
     For instance, a hypothetical #term{dialect} may use attributes to style text.
 
-    #=src[lang='pro']:
+    #=src[lang='prosidy']:
 ---
 This isn't a #style[italic]{real} dialect, 
 but it #style[bold]{does} work as an example!
@@ -196,7 +196,7 @@ but it #style[bold]{does} work as an example!
     The same hypothetical #term{dialect} from #ref[section='Properties']{before}
     may allow #i{color} to be specified as a setting.
 
-    #=src[lang='pro']:
+    #=src[lang='prosidy']:
 ---
 #style[color='#F00']{This text is red};
 but #style[bold, color='#0F0']{this text is blue and bold}.
@@ -211,6 +211,10 @@ but #style[bold, color='#0F0']{this text is blue and bold}.
 
 #-section[title='Tags & contexts']:
   A #def{tag} is a #term{key} used to annotate a region of a document.
+
+  #-section[title='Block context']:
+
+  #-section[title='Inline context']:
 
   #-section[title='Literal context']:
   #:

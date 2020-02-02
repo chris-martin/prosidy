@@ -41,6 +41,7 @@ let
             megaparsec
             optparse-applicative
             shake
+	        skylighting-core
             tasty
             tasty-golden
             tasty-hunit

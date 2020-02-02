@@ -34,7 +34,42 @@ class CalculateViewing {
     }
 }
 
+const updateSourceBlocks = () => {
+    for (const snippet of document.querySelectorAll('pre.source-code')) {
+        const lines = snippet.querySelectorAll(':scope > code > code.source-line');
+        const {min, max} = Array.from(lines).reduce((acc, line) => {
+            const {min, max} = acc;
+            const lineNumber = Number.parseInt(line.dataset.lineNumber, 10);
+            return {
+                min: min && min < lineNumber ? min : lineNumber,
+                max: max && max > lineNumber ? max : lineNumber,
+            }
+        }, {});
+
+        if (min && max) {
+            const el = document.createElement('div');
+            el.classList.add('line-numbers');
+            for (let nth = min; nth <= max; nth ++) {
+                const number = document.createElement('code');
+                number.classList.add('line-number');
+                number.innerText = nth;
+                el.append(number);
+            }
+            snippet.prepend(el);
+        }
+
+        const language = snippet.dataset.language;
+        if (language) {
+            const lang = document.createElement('div');
+            lang.classList.add('language');
+            lang.innerText = language;
+            snippet.prepend(lang);
+        }
+    }
+};
+
 const main = () => {
+    updateSourceBlocks();
     const calc = new CalculateViewing;
     const update = () => calc.update();
     window.addEventListener('scroll', update);

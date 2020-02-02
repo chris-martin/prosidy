@@ -13,6 +13,7 @@ import           Prosidy.Compile.Internal.Info  ( InfoKey
 import           Prosidy.Compile.Internal.Error ( Result(Fail)
                                                 , ResultT(..)
                                                 , raiseError
+                                                , resultError
                                                 , singleton
                                                 )
 import           Prosidy.Types                  ( Key
@@ -29,7 +30,6 @@ import           Prosidy.Source                 ( SourceLocation
                                                 , sourceLocationLine
                                                 )
 import           Control.Exception              ( Exception(..) )
-
 import           Control.Monad.Morph            ( MFunctor(..) )
 import           Control.Monad.Reader           ( ReaderT(..) )
 import           Control.Monad.State.Strict     ( StateT(..) )
@@ -59,6 +59,9 @@ instance MFunctor (Eval input) where
 
 instance MonadTrans (Eval input) where
     lift m = Eval $ \_ st -> fmap (\x -> (pure x, st)) m
+
+instance Monad context => MonadFail (Eval input context) where
+    fail message = Eval $ \_ st -> pure (resultError . CustomError $ Text.pack message, st)
 
 -- | Keeps track of which properties and settings have been visited.
 data EvalState = EvalState

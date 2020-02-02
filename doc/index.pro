@@ -18,12 +18,16 @@ it doesn't have any preconceived ideas about the what you write,
 letting the author tailor the language presicely to their use case.
 
 #-section[title: 'Get Prosidy']:
-  #-note[level: 'caution']:
+  #-note[level: 'important']:
     Prosidy is currently #i{pre-alpha} software.
 
-    Neither its specification nor the reference tooling
-    have stabalized. Use at your own risk.
+    While it's more than usable 
+    (#link[url='https://git.fldcr.com/prosidy/tree/doc/index.pro']{this site is built with it}),
+    neither its specification nor the reference tooling have stabalized. 
+    
+    Use at your own risk.
   #:
+
 
   Prosidy is available under the
   #link[url='https://www.mozilla.org/en-US/MPL/2.0/']{MPL v2.0}

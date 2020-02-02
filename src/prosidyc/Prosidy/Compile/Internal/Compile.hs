@@ -297,6 +297,9 @@ descendWith sel ~(ProductRule md eval) = Desc $ do
 self :: Applicative context => Desc input context input
 self = Desc . pure . Eval.Eval $ \i st -> pure (Error.Ok i, st)
 
+compileError :: Monad context => String -> Desc input context output
+compileError = Desc . pure . fail
+
 -------------------------------------------------------------------------------
 type CompileM = ExceptT CompileError (State Registry)
 

@@ -1,6 +1,9 @@
-@import url('https://fonts.googleapis.com/css?family=Fira+Code|Playfair+Display:400,400i|PT+Serif:400,400i,700,700i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Fira+Code:400,400i,700|Playfair+Display:400,400i|PT+Serif:400,400i,700,700i&display=swap');
+@import url('./nord.css');
 
 html {
+    background-color: white;
+    color: var(--nord0); 
     font: 16px/1.4 'PT Serif', Georgia, Times, Times New Roman, serif;
     height: 100%;
 }
@@ -13,18 +16,18 @@ body {
 }
 
 a {
-    color: #2454C7;
-    text-decoration: none;
+    background-color: var(--nord6);
+    color: inherit;
+}
+
+a:hover {
+    background-color: var(--nord5);
 }
 
 a.term-reference {
     color: inherit;
     font-style: italic;
     text-decoration: dotted underline;
-}
-
-a:hover {
-    text-decoration: underline;
 }
 
 dfn {
@@ -64,7 +67,7 @@ header > hgroup > h1 {
 }
 
 header > hgroup > h2 {
-    color: #444;
+    color: var(--nord2);
     font-family: Playfair Display;
     font-weight: normal;
     font-style: italic;
@@ -80,17 +83,19 @@ nav {
 
 nav a {
     color: inherit;
+    background-color: transparent;
     text-decoration: none;
     display: inline-block;
     position: relative;
 }
 
-nav .current a.viewing {
-    color: #2454C7;
-}
+nav .current a.viewing::before {
+    content: "→ ";
+    display: block;
+    position: absolute;
+    right: 100%;
 
-nav a:hover {
-    color: #2454C7;
+    /* font-weight:bold; */
 }
 
 nav ol,
@@ -116,9 +121,7 @@ nav > ol > li > ol {
 
 nav > ol > li > ol > li > ol {
     display: none;
-    border-left: 1px solid #2454C7;
-    margin-left: 1ch;
-    padding-left: 1ch;
+    margin-left: 2ch;
 }
 
 nav > ol > li > ol > li.viewing-child > ol,
@@ -148,14 +151,14 @@ h6 + section
 }
 
 code {
-    background: #f4f4f4;
-    font-family: monospace;
-    font-size: 0.9em;
+    background: var(--nord6);
+    color: var(--nord0);
+    font-family: Fira Code, monospace;
 }
 
 aside {
-    background-color: #ddd;
-    border-left: 4px solid #333;
+    background-color: var(--nord6);
+    border-left: 4px solid var(--nord1);
     font-size: 0.85em;
     padding: 1px 0.5em;
     margin: 1rem;
@@ -171,31 +174,36 @@ aside p:first-child {
     font-weight: bold;
 }
 
-aside.info {
-    background-color: #d7f4ef;
-    border-color: #23C6A8;
-}
-
-aside.info::before {
-    background-image: url('info.svg');
-}
-
 aside.caution {
-    background-color: #f4d7d7;
-    border-color: #c62323;
+    border-color: var(--nord11);
 }
 
 aside.caution::before {
-    background-image: url('alert.svg');
+    background-image: url('/res/caution.svg');
 }
 
-aside.wip {
-    background-color: #f4f0d7;
-    border-color: #c6ae23;
+aside.important {
+    border-color:var(--nord13);
 }
 
-aside.wip::before {
-    background-image: url('wip.svg');
+aside.important::before {
+    background-image: url('/res/important.svg');
+}
+
+aside.info {
+    border-color: var(--nord15);
+}
+
+aside.info::before {
+    background-image: url('/res/info.svg');
+}
+
+aside.tip {
+    border-color: var(--nord14);
+}
+
+aside.tip::before {
+    background-image: url('/res/tip.svg');
 }
 
 .char-sequence-literal > span,
@@ -205,42 +213,48 @@ aside.wip::before {
 
 /* footer */
 footer {
-    background-color: #444;
-    color: #ddd;
+    background-color: var(--nord0);
+    color: var(--nord4);
     font-size: 0.8em;
     margin: 2rem -1rem -1rem;
-    min-height: 8em;
+    min-height: 8rem;
 
-    text-align: center;
-    padding: 2rem 0;
+    display: grid;
+    grid-template-columns: max-content max-content;
+    align-items: center;
+    justify-items: center;
+    justify-content: space-around;
 }
 
-pre.source-code {
-    background-color: #fdf6e3;
-    border: 1px solid #eee8d5;
-    color: #839496; 
+footer a {
+    background-color: var(--nord1);
+    color: var(--nord5);
 }
 
-pre.source-code > code {
-    display: block;
-    padding: 0 1ch;
-    background-color: #fdf6e3;
+footer a:hover {
+    background-color: var(--nord2);
 }
 
-pre.source-code::before {
-    content: "Source code";
-    background-color: #eee8d5;
-    color: #93a1a1;
-    display: block;
-    font-size: 0.8em;
-    padding: 0 1ch;
+#credits {
+    margin-top: 1em;
+}
+
+footer > ul {
+    line-height: 2;
+    margin: 0;
+    padding: 0;    
+    text-align: right;
+}
+
+footer > ul > li {
+    list-style: none;
 }
 
 /* Special rules for tiny views */
 @media screen and (max-width: 60ch) {
     nav {
-        background-color: #f8f8f8;
-        border: 1px solid #ddd;
+        background-color: var(--nord6);
+        border: 1px solid var(--nord3);
         padding: 1rem 1rem 1px 1rem;
         margin: 1rem 0;
     }
@@ -317,5 +331,197 @@ pre.source-code::before {
 
     nav > ol, nav > ul {
         position: sticky;
+        top: 1em;
     }
+}
+
+
+/* SYNTAX HIGHLIGHTING */
+
+pre.source-code {
+    background-color: var(--nord0);
+    border: 3px solid var(--nord1);
+    color: var(--nord6);
+
+    display: grid;
+    grid-template-columns: max-content auto;
+    grid-column-gap: 0.5ch;
+}
+
+pre.source-code > div {
+    background-color: var(--nord1);
+    color: var(--nord4);
+}
+
+pre.source-code > div.line-numbers {
+    padding: 0 0.5ch;
+    text-align: right;
+}
+
+pre.source-code > div.line-numbers > code {
+    background-color: transparent;
+    color: var(--nord4);
+    display: block;
+    font-size: 0.7rem;
+    min-height: 1.0rem;
+    line-height: 1.0rem;
+}
+
+pre.source-code > div.language {
+    grid-column: 1 / span 2;
+    font-size: 0.7rem;
+    line-height: 1;
+    padding: 0.25ch 0.5ch;
+    text-align: center;
+    font-weight: bold;
+    }
+
+pre.source-code > div.language::before {
+    content: "language: ";
+    font-weight: normal;
+}
+
+pre.source-code > code {
+    background-color: transparent;
+    overflow-x: auto;
+}
+
+pre.source-code > code > code {
+    display: block;
+    background-color: transparent;
+    font-size: 0.8rem;
+    min-height: 1.0rem;
+    line-height: 1.0rem;
+}
+
+pre.source-code [data-type="alert"] {
+    color: var(--nord13);
+}
+
+pre.source-code [data-type="annotation"] {
+    color: var(--nord12);
+}
+
+pre.source-code [data-type="attribute"] {
+    color: var(--nord4);
+    font-weight: bold;
+}
+
+pre.source-code [data-type="builtin"] {
+    color: var(--nord7);
+}
+
+pre.source-code [data-type="character"] {
+    color: var(--nord14);
+}
+
+pre.source-code [data-type="comment"] {
+    color: var(--nord3);
+    font-style: italic;
+}
+
+pre.source-code [data-type="comment-variable"] {
+    color: var(--nord9);
+}
+
+pre.source-code [data-type="constant"] {
+    color: var(--nord4);
+    font-weight: bold;
+}
+
+pre.source-code [data-type="control-flow"] {
+    color: var(--nord9);
+}
+
+pre.source-code [data-type="data-type"] {
+    color: var(--nord7);
+}
+
+pre.source-code [data-type="documentation"] {
+    background-color: var(--nord2);
+    color: var(--nord3);
+    font-style: italic;
+}
+
+pre.source-code [data-type="error"] {
+    color: var(--nord11);
+}
+
+pre.source-code [data-type="extension"] {
+    color: var(--nord10);
+}
+
+pre.source-code [data-type="floating-point"] {
+    color: var(--nord15);
+}
+
+pre.source-code [data-type="function"] {
+    color: var(--nord8);
+}
+
+pre.source-code [data-type="import"] {
+    color: var(--nord10);
+}
+
+pre.source-code [data-type="information"] {
+    color: var(--nord14);
+}
+
+pre.source-code [data-type="integer"] {
+    color: var(--nord15);
+}
+
+pre.source-code [data-type="keyword"] {
+    color: var(--nord9);
+}
+
+pre.source-code [data-type="nondecimal-integer"] {
+    color: var(--nord15);
+}
+
+pre.source-code [data-type="normal"] {
+    color: var(--nord6);
+}
+
+pre.source-code [data-type="operator"] {
+    color: var(--nord9);
+}
+
+pre.source-code [data-type="other"] {
+    color: var(--nord13);
+}
+
+pre.source-code [data-type="preprocessor"] {
+    color: var(--nord9);
+}
+
+pre.source-code [data-type="region-marker"] {
+    color: var(--nord9);
+}
+
+pre.source-code [data-type="special-character"] {
+    color: var(--nord13);
+    font-style: italic;
+}
+
+pre.source-code [data-type="special-string"] {
+    color: var(--nord13);
+    font-style: italic;
+}
+
+pre.source-code [data-type="string"] {
+    color: var(--nord14);
+}
+
+pre.source-code [data-type="variable"] {
+    color: var(--nord4);
+    font-weight: bold;
+}
+
+pre.source-code [data-type="verbatim-string"] {
+    color: var(--nord14);
+}
+
+pre.source-code [data-type="warning"] {
+    color: var(--nord13);
 }

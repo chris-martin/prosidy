@@ -14,6 +14,7 @@ module Prosidy.Compile
     , compile
     , compileM
     , compileRegistry
+    , compileError
     , document
     , block
     , inline

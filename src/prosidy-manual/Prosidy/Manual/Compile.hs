@@ -13,6 +13,7 @@ import           Prosidy.Manual.Slug            ( Slug(..)
                                                 , FileSlug(..)
                                                 , slug
                                                 )
+import Prosidy.Manual.Highlight (highlight)
 import           Control.Lens.Operators
 import           Control.Applicative            ( (<|>) )
 
@@ -106,17 +107,32 @@ document = mdo
                 H.head $ do
                     H.meta ! HA.charset "UTF-8"
                     H.title $ H.text title
-                    style "res/manual.css"
                     H.script mempty ! HA.src "res/manual.js"
+                    style "res/manual.css"
                 H.body $ do
-                    H.header $ do
+                    H.header . H.hgroup $ do
                         H.h1 titleText
                         foldMap (H.h2 . H.text) subtitle
                     H.nav tocHtml
                     H.main body
                     H.footer $ do
-                        H.div "Copyright ©2020 James Alexander Feldman-Crough"
-                            ! HA.id "copyright"
+                        H.div $ do
+                            H.div ! HA.id "copyright" $
+                                "Copyright ©2020 James Alexander Feldman-Crough."
+                            H.div ! HA.id "license" $ do
+                                "Released under the "
+                                H.a "MPL-2.0 license" 
+                                    ! HA.href "https://www.mozilla.org/en-US/MPL/2.0/"
+                                "."
+                            H.div ! HA.id "credits" $ do
+                                "Our color scheme is "
+                                H.a "Nord" ! HA.href "https://www.nordtheme.com/"
+                                "."
+                        H.ul $ do
+                            H.li $ H.a "Homepage" ! HA.href "https://prosidy.org"
+                            H.li $ H.a "Source repository" ! HA.href "https://git.fldcr.com/prosidy"
+                            H.li $ H.a "Contact us" ! HA.href "mailto:hello@prosidy.org"
+                            
 
 blockTag :: C.ProductRule Block Manual H.Html -> Html BlockTag
 blockTag blockRule = do
@@ -127,11 +143,6 @@ blockTag blockRule = do
             level <- C.req @NoteLevel "level" "The 'severity' of the note."
             body  <- C.children blockRule
             pure $ H.aside body ! HA.class_ (H.toValue level)
-
-    specRule <- C.tag "spec" "A part of the specification with test cases." $ do
-        _test <- C.reqText "test" "The name of the test."
-        body  <- C.children blockRule
-        pure body
 
     sectionRule <-
         C.tag "section" "A container which deliniates sections of a page." $ do
@@ -150,6 +161,11 @@ blockTag blockRule = do
                 H.section ! HA.id (H.toValue theSlug) $ do
                     hTag $ H.text title
                     body
+
+    specRule <- C.tag "spec" "A part of the specification with test cases." $ do
+        _test <- C.reqText "test" "The name of the test."
+        body  <- C.children blockRule
+        pure body
 
     C.oneOf "block tag"
             "A top-level block tag."
@@ -278,18 +294,19 @@ hexadecimalize = go []
 
 literalTag :: Html LiteralTag
 literalTag = do
-    codeRule <- C.literal "source code" "Source code literal" (pure . H.text)
+    codeRule <- C.literal "source code" "Source code literal" pure
 
     srcRule  <- C.tag "src" "A block of source code." $ do
         lang <- C.optText
             "lang"
             "The programming language of the source-code block."
         body <- C.child codeRule
-        pure
-            $ H.pre
-            ! HA.class_ "source-code"
-            ! foldMap (H.dataAttribute "language" . H.toValue) lang
-            $ H.code body
+        pure $ do
+            let body' | Just stx <- lang = highlight stx body
+                      | otherwise        = H.text body
+            H.pre (H.code body')
+                ! HA.class_ "source-code"
+                ! foldMap (H.dataAttribute "language" . H.toValue) lang
 
     C.oneOf "literal tag" "A top-level literal tag." [srcRule]
 

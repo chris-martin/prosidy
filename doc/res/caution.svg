@@ -10,14 +10,14 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
-   width="768"
-   height="768"
-   viewBox="0 0 768 768"
-   id="svg4"
-   sodipodi:docname="info.svg"
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   id="svg6"
+   sodipodi:docname="caution.svg"
    inkscape:version="0.92.4 (unknown)">
   <metadata
-     id="metadata10">
+     id="metadata12">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -28,7 +28,7 @@
     </rdf:RDF>
   </metadata>
   <defs
-     id="defs8" />
+     id="defs10" />
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -40,17 +40,19 @@
      inkscape:pageshadow="2"
      inkscape:window-width="841"
      inkscape:window-height="480"
-     id="namedview6"
+     id="namedview8"
      showgrid="false"
-     inkscape:zoom="0.30729167"
-     inkscape:cx="-943.72881"
-     inkscape:cy="384"
+     inkscape:zoom="9.8333333"
+     inkscape:cx="12"
+     inkscape:cy="12"
      inkscape:window-x="0"
      inkscape:window-y="48"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg4" />
+     inkscape:current-layer="svg6" />
+  <title
+     id="title2">x-octagon</title>
   <path
-     d="M736 384c0-97.184-39.424-185.248-103.104-248.896s-151.712-103.104-248.896-103.104-185.248 39.424-248.896 103.104-103.104 151.712-103.104 248.896 39.424 185.248 103.104 248.896 151.712 103.104 248.896 103.104 185.248-39.424 248.896-103.104 103.104-151.712 103.104-248.896zM672 384c0 79.552-32.192 151.488-84.352 203.648s-124.096 84.352-203.648 84.352-151.488-32.192-203.648-84.352-84.352-124.096-84.352-203.648 32.192-151.488 84.352-203.648 124.096-84.352 203.648-84.352 151.488 32.192 203.648 84.352 84.352 124.096 84.352 203.648zM416 512v-128c0-17.664-14.336-32-32-32s-32 14.336-32 32v128c0 17.664 14.336 32 32 32s32-14.336 32-32zM384 288c17.664 0 32-14.336 32-32s-14.336-32-32-32-32 14.336-32 32 14.336 32 32 32z"
-     id="path2"
-     style="fill:#b48ead;fill-opacity:1" />
+     d="M7.86 1c-0.256 0-0.512 0.098-0.707 0.293l-5.86 5.86c-0.181 0.181-0.293 0.431-0.293 0.707v8.28c0 0.256 0.098 0.512 0.293 0.707l5.86 5.86c0.181 0.181 0.431 0.293 0.707 0.293h8.28c0.256 0 0.512-0.098 0.707-0.293l5.86-5.86c0.181-0.181 0.293-0.431 0.293-0.707v-8.28c0-0.256-0.098-0.512-0.293-0.707l-5.86-5.86c-0.181-0.181-0.431-0.293-0.707-0.293zM8.274 3h7.452l5.274 5.274v7.452l-5.274 5.274h-7.452l-5.274-5.274v-7.452zM8.293 9.707l2.293 2.293-2.293 2.293c-0.391 0.391-0.391 1.024 0 1.414s1.024 0.391 1.414 0l2.293-2.293 2.293 2.293c0.391 0.391 1.024 0.391 1.414 0s0.391-1.024 0-1.414l-2.293-2.293 2.293-2.293c0.391-0.391 0.391-1.024 0-1.414s-1.024-0.391-1.414 0l-2.293 2.293-2.293-2.293c-0.391-0.391-1.024-0.391-1.414 0s-0.391 1.024 0 1.414z"
+     id="path4"
+     style="fill:#bf616a;fill-opacity:1" />
 </svg>
