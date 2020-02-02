@@ -81,7 +81,7 @@ mainBuild Opts { outDir, srcDir } = do
         Shake.liftIO $ do
             toc   <- either throwIO pure $ tableOfContents tocFiles base doc
             bytes <- either throwIO pure $ compile document toc doc
-            LBS.writeFile path bytes
+            LBS.writeFile path $ "<!doctype html>\n" <> bytes
 
     [outDir <//> "*.css", outDir <//> "*.js", outDir <//> "*.svg"] |%> \path ->
         do
