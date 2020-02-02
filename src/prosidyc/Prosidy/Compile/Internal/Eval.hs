@@ -61,7 +61,8 @@ instance MonadTrans (Eval input) where
     lift m = Eval $ \_ st -> fmap (\x -> (pure x, st)) m
 
 instance Monad context => MonadFail (Eval input context) where
-    fail message = Eval $ \_ st -> pure (resultError . CustomError $ Text.pack message, st)
+    fail message =
+        Eval $ \_ st -> pure (resultError . CustomError $ Text.pack message, st)
 
 -- | Keeps track of which properties and settings have been visited.
 data EvalState = EvalState

@@ -1,30 +1,33 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Prosidy.Manual.Highlight where
 
-import qualified Skylighting.Core as S
-import qualified Data.Map.Strict as Map
-import System.IO.Unsafe (unsafePerformIO)
-import Data.Text (Text)
-import Text.Blaze.Html5 ((!), Html)
-import qualified Text.Blaze.Html5 as H
-import qualified Text.Blaze.Html5.Attributes as HA
-import Data.Foldable (for_)
-import Numeric.Natural (Natural)
+import qualified Skylighting.Core              as S
+import qualified Data.Map.Strict               as Map
+import           System.IO.Unsafe               ( unsafePerformIO )
+import           Data.Text                      ( Text )
+import           Text.Blaze.Html5               ( (!)
+                                                , Html
+                                                )
+import qualified Text.Blaze.Html5              as H
+import qualified Text.Blaze.Html5.Attributes   as HA
+import           Data.Foldable                  ( for_ )
+import           Numeric.Natural                ( Natural )
 
 highlight :: Text -> Text -> Html
 highlight stxName src
-  | Just stx    <- syntax stxName 
-  , Right lines <- tokenize stx src
-  = for_ (zip [1..] lines) (uncurry renderLine)
-  | otherwise
-  = H.code $ H.text src
+    | Just stx <- syntax stxName, Right lines <- tokenize stx src = for_
+        (zip [1 ..] lines)
+        (uncurry renderLine)
+    | otherwise = H.code $ H.text src
 
 renderLine :: Natural -> S.SourceLine -> Html
-renderLine lno line = H.code 
-    ! H.dataAttribute "line-number" (H.toValue $ show lno)
-    ! HA.class_ "source-line"
-    $ for_ line $ \(type_, token) -> 
-        H.span (H.text token) ! H.dataAttribute "type" (tokenClass type_)
+renderLine lno line =
+    H.code
+        ! H.dataAttribute "line-number" (H.toValue $ show lno)
+        ! HA.class_ "source-line"
+        $ for_ line
+        $ \(type_, token) ->
+              H.span (H.text token) ! H.dataAttribute "type" (tokenClass type_)
 
 tokenClass :: S.TokenType -> H.AttributeValue
 tokenClass S.KeywordTok        = "keyword"
@@ -60,10 +63,9 @@ tokenClass S.ErrorTok          = "error"
 tokenClass S.NormalTok         = "normal"
 
 tokenize :: S.Syntax -> Text -> Either String [S.SourceLine]
-tokenize = S.tokenize S.TokenizerConfig
-    { S.syntaxMap   = syntaxMap
-    , S.traceOutput = False
-    }
+tokenize = S.tokenize S.TokenizerConfig { S.syntaxMap   = syntaxMap
+                                        , S.traceOutput = False
+                                        }
 
 syntax :: Text -> Maybe S.Syntax
 syntax = flip S.lookupSyntax syntaxMap
@@ -75,7 +77,7 @@ formatOptions :: S.FormatOptions
 formatOptions = S.defaultFormatOpts
 
 prosidySyntax :: S.Syntax
-prosidySyntax = unsafePerformIO $ do 
+prosidySyntax = unsafePerformIO $ do
     result <- S.parseSyntaxDefinition "./kate/prosidy.xml"
     either fail pure result
 

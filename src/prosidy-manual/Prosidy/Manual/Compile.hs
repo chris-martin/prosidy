@@ -13,7 +13,7 @@ import           Prosidy.Manual.Slug            ( Slug(..)
                                                 , FileSlug(..)
                                                 , slug
                                                 )
-import Prosidy.Manual.Highlight (highlight)
+import           Prosidy.Manual.Highlight       ( highlight )
 import           Control.Lens.Operators
 import           Control.Applicative            ( (<|>) )
 
@@ -117,22 +117,27 @@ document = mdo
                     H.main body
                     H.footer $ do
                         H.div $ do
-                            H.div ! HA.id "copyright" $
-                                "Copyright ©2020 James Alexander Feldman-Crough."
+                            H.div
+                                ! HA.id "copyright"
+                                $ "Copyright ©2020 James Alexander Feldman-Crough."
                             H.div ! HA.id "license" $ do
                                 "Released under the "
-                                H.a "MPL-2.0 license" 
-                                    ! HA.href "https://www.mozilla.org/en-US/MPL/2.0/"
+                                H.a "MPL-2.0 license" ! HA.href
+                                    "https://www.mozilla.org/en-US/MPL/2.0/"
                                 "."
                             H.div ! HA.id "credits" $ do
                                 "Our color scheme is "
-                                H.a "Nord" ! HA.href "https://www.nordtheme.com/"
+                                H.a "Nord"
+                                    ! HA.href "https://www.nordtheme.com/"
                                 "."
                         H.ul $ do
-                            H.li $ H.a "Homepage" ! HA.href "https://prosidy.org"
-                            H.li $ H.a "Source repository" ! HA.href "https://git.fldcr.com/prosidy"
-                            H.li $ H.a "Contact us" ! HA.href "mailto:hello@prosidy.org"
-                            
+                            H.li $ H.a "Homepage" ! HA.href
+                                "https://prosidy.org"
+                            H.li $ H.a "Source repository" ! HA.href
+                                "https://git.fldcr.com/prosidy"
+                            H.li $ H.a "Contact us" ! HA.href
+                                "mailto:hello@prosidy.org"
+
 
 blockTag :: C.ProductRule Block Manual H.Html -> Html BlockTag
 blockTag blockRule = do
