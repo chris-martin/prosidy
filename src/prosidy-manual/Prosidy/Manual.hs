@@ -9,6 +9,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TemplateHaskell #-}
 module Prosidy.Manual where
 
 import           Development.Shake.Classes
@@ -37,6 +38,7 @@ import           Prosidy.Manual.Compile         ( compile
                                                 , document
                                                 )
 import           Prosidy.Manual.Opts
+import Prosidy.Manual.Version (shakeVersionQ)
 import           Prosidy.Manual.Slug
 import           Prosidy.Manual.TableOfContents
 
@@ -53,6 +55,7 @@ mainOpts Opts { dbDir, outDir } = Shake.shakeOptions
     , Shake.shakeThreads       = 0
     , Shake.shakeAbbreviations = [(outDir, "$OUTPUT")]
     , Shake.shakeProgress      = Shake.progressSimple
+    , Shake.shakeVersion       = $(shakeVersionQ)
     }
 
 mainBuild :: Opts -> Shake.Rules ()

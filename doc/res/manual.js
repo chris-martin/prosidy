@@ -11,7 +11,7 @@ class CalculateViewing {
 
     update() {
         if (!this.currentLinks) return;
-        const currentTop = window.scrollY + window.innerHeight / 2;
+        const currentTop = window.scrollY;
         let viewing;
         for (const section of this.sections) {
             if (section.offsetTop > currentTop) break;

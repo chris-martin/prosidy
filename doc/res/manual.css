@@ -95,15 +95,6 @@ nav a {
     position: relative;
 }
 
-nav .current a.viewing::before {
-    content: "→ ";
-    display: block;
-    position: absolute;
-    right: 100%;
-
-    /* font-weight:bold; */
-}
-
 nav ol,
 nav li
 {
@@ -223,13 +214,6 @@ footer {
     color: var(--nord4);
     font-size: 0.8em;
     margin: 2rem -1rem -1rem;
-    min-height: 8rem;
-
-    display: grid;
-    grid-template-columns: max-content max-content;
-    align-items: center;
-    justify-items: center;
-    justify-content: space-around;
 }
 
 footer a {
@@ -246,10 +230,8 @@ footer a:hover {
 }
 
 footer > ul {
-    line-height: 2;
     margin: 0;
     padding: 0;    
-    text-align: right;
 }
 
 footer > ul > li {
@@ -257,26 +239,41 @@ footer > ul > li {
 }
 
 /* Special rules for tiny views */
-@media screen and (max-width: 60ch) {
+@media screen and (max-width: 480px) {
     nav {
         background-color: var(--nord6);
         border: 1px solid var(--nord3);
-        padding: 1rem 1rem 1px 1rem;
+        padding: 0.5rem;
         margin: 1rem 0;
     }
 }
 
 /* Special rules for small views */
-@media screen and (max-width: 60ch) and (min-width: 40ch) {
+@media screen and (max-width: 480px) and (min-width: 320px) {
     nav {
         float: right;
         margin: 0 0 1rem 1rem;
         width: 25ch;
     }
+
+    footer {
+        padding: 1em;
+        text-align: left;
+    }
+
+    footer > ul {
+        margin: 1em 0;
+        text-align: center;
+    }
+
+    footer > ul > li {
+        display: inline-block;
+        margin: 0 1ch;
+    }
 }
 
 /* Special rules for big views */
-@media screen and (min-width: 60ch) {
+@media screen and (min-width: 480px) {
     header > hgroup > h1 {
         font-size: 4rem;
     }
@@ -339,6 +336,27 @@ footer > ul > li {
         position: sticky;
         top: 1em;
     }
+
+    nav .current a.viewing::before {
+        content: "→ ";
+        display: block;
+        position: absolute;
+        right: 100%;
+    }
+
+    footer {
+        min-height: 8rem;
+        display: grid;
+        grid-template-columns: minmax(min-content, 40%) auto;
+        align-items: center;
+        justify-items: center;
+        justify-content: space-around;
+    }
+
+    footer > ul {
+        text-align: right;
+        line-height: 2;
+    }
 }
 
 
@@ -380,11 +398,13 @@ pre.source-code > div.language {
     padding: 0.25ch 0.5ch;
     text-align: center;
     font-weight: bold;
-    }
+}
 
 pre.source-code > div.language::before {
     content: "language: ";
     font-weight: normal;
+    font-size: 0.7rem;
+    line-height: 1;
 }
 
 pre.source-code > code {

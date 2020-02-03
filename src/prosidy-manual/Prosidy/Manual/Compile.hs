@@ -108,6 +108,7 @@ document = mdo
                     H.meta ! HA.charset "UTF-8"
                     H.title $ H.text title
                     H.script mempty ! HA.src "res/manual.js"
+                    H.meta ! HA.name "viewport" ! HA.content "width=device-width, initial-scale=1"
                     style "res/manual.css"
                 H.body $ do
                     H.header . H.hgroup $ do
@@ -129,6 +130,15 @@ document = mdo
                                 "Our color scheme is "
                                 H.a "Nord"
                                     ! HA.href "https://www.nordtheme.com/"
+                                ". Our fonts are "
+                                H.a "PT Serif"
+                                    ! HA.href "https://www.paratype.com/fonts/pt/pt-serif"
+                                ", "
+                                H.a "Playfair Display"
+                                    ! HA.href "https://github.com/clauseggers/Playfair-Display"
+                                ", and "
+                                H.a "Fira Code"
+                                    ! HA.href "https://github.com/tonsky/FiraCode"
                                 "."
                         H.ul $ do
                             H.li $ H.a "Homepage" ! HA.href
