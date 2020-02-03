@@ -410,6 +410,7 @@ pre.source-code > div.language::before {
 pre.source-code > code {
     background-color: transparent;
     overflow-x: auto;
+    overflow-y: hidden;
 }
 
 pre.source-code > code > code {
