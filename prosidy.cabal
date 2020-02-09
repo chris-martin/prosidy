@@ -18,7 +18,7 @@ description:
 
 source-repository head
    type:     git
-   location: https://git.fldcr.com/prosidy
+   location: https://git.fldcr.com/prosidy/prosidy
 
 flag fatal-warnings
   description: Turns all warnings into errors. Used in CI.

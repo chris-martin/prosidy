@@ -56,7 +56,7 @@ recipe: A simple roux
     Prosidy is currently #i{pre-alpha} software.
 
     While it's more than usable 
-    (#link[url='https://git.fldcr.com/prosidy/tree/doc/index.pro']{this site is built with it}),
+    (#link[url='https://git.fldcr.com/prosidy/prosidy/src/branch/master/doc/index.pro']{this site is built with it}),
     neither its specification nor the reference tooling have stabalized. 
     
     Use at your own risk.
@@ -67,9 +67,9 @@ recipe: A simple roux
   #link[url='https://www.mozilla.org/en-US/MPL/2.0/']{MPL v2.0}
   license.
   The latest source can be downloaded as an archive in
-  #link[url='https://git.fldcr.com/prosidy/snapshot/prosidy-master.tar.gz']{#lit{.tar.gz}}
+  #link[url='https://git.fldcr.com/prosidy/prosidy/archive/master.tar.gz']{#lit{.tar.gz}}
   or
-  #link[url='https://git.fldcr.com/prosidy/snapshot/prosidy-master.zip']{#lit{.zip}}
+  #link[url='https://git.fldcr.com/prosidy/prosidy/archive/master.zip']{#lit{.zip}}
   format.
 
   Alternatively, you can clone it via Git at
