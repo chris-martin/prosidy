@@ -1,8 +1,5 @@
 .stack-work/
-/.env
 dist/
 dist-newstyle/
 /cabal.project.local
-/.out/
-/.prosidy-manual/
 *~

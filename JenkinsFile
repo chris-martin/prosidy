@@ -1,0 +1,16 @@
+pipeline {
+    agent {
+        docker {
+            image 'utdemir/ghc-musl:v4-integer-simple-ghc881'
+        }        
+    }
+
+    stages {
+        stage('build') {
+            steps {
+                sh 'cabal v2-build'
+                sh 'cabal v2-test'
+            }
+        }
+    }
+}

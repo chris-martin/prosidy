@@ -1,4 +1,4 @@
-packages: prosidy.cabal
-
-optimization: True
-split-sections: True
+packages:          prosidy.cabal
+optimization:      True
+split-sections:    True
+test-show-details: direct

@@ -1,53 +1,52 @@
 {
-    "content": [
+  "content": [
+    {
+      "value": [
         {
-            "value": [
-                {
-                    "value": "The next paragraph contains the character",
-                    "type": "text"
-                },
-                {
-                    "value": [],
-                    "type": "break"
-                },
-                {
-                    "value": {
-                        "content": [
-                            {
-                                "value": "0xC0",
-                                "type": "text"
-                            }
-                        ],
-                        "name": "lit",
-                        "metadata": {
-                            "settings": {},
-                            "properties": []
-                        }
-                    },
-                    "subtype": "inline",
-                    "type": "tag"
-                },
-                {
-                    "value": ", which is not valid UTF-8.",
-                    "type": "text"
-                }
-            ],
-            "type": "paragraph"
+          "value": "The next paragraph contains the character",
+          "type": "text"
         },
         {
-            "value": [
-                {
-                    "value": "Invalid:�",
-                    "type": "text"
-                }
+          "type": "break"
+        },
+        {
+          "value": {
+            "content": [
+              {
+                "value": "0xC0",
+                "type": "text"
+              }
             ],
-            "type": "paragraph"
+            "name": "lit",
+            "metadata": {
+              "settings": {},
+              "properties": {}
+            }
+          },
+          "subtype": "inline",
+          "type": "tag"
+        },
+        {
+          "value": ", which is not valid UTF-8.",
+          "type": "text"
         }
-    ],
-    "metadata": {
-        "settings": {
-            "case": "Invalid Utf-8"
-        },
-        "properties": []
+      ],
+      "type": "paragraph"
+    },
+    {
+      "value": [
+        {
+          "value": "Invalid:�",
+          "type": "text"
+        }
+      ],
+      "type": "paragraph"
     }
+  ],
+  "metadata": {
+    "settings": {
+      "case": "Invalid Utf-8"
+    },
+    "properties": {}
+  }
 }

@@ -1,3 +1,6 @@
 cradle:
-  bios:
-    program: bin/hie-bios-setup
+    cabal:
+        - path: '.'
+          component: 'lib:prosidy'
+        - path: './test'
+          component: 'test:prosidy-test'

@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "properties": [
-      "prop",
-      "prop-with-comment",
-      "prop-with-leading-spaces"
-    ],
+    "properties": {
+      "prop": true,
+      "prop-with-comment": true,
+      "prop-with-leading-spaces": true
+    },
     "settings": {
       "set-a1": "42",
       "set-a2": "42",
@@ -57,7 +57,6 @@
           "type": "text"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
@@ -74,7 +73,6 @@
           "type": "text"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
@@ -82,7 +80,6 @@
           "type": "text"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
@@ -98,7 +95,7 @@
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": [
@@ -112,7 +109,6 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
@@ -129,14 +125,13 @@
           "type": "text"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": [
@@ -159,14 +154,13 @@
           "type": "text"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": [
@@ -180,7 +174,6 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
@@ -188,14 +181,13 @@
           "type": "text"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": [
@@ -221,7 +213,7 @@
           "value": {
             "name": "a",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": []
@@ -237,7 +229,7 @@
           "value": {
             "name": "c",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": []
@@ -249,7 +241,7 @@
           "value": {
             "name": "d",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": []
@@ -267,14 +259,13 @@
           "type": "text"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": []
@@ -283,14 +274,13 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": []
@@ -299,14 +289,13 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": []
@@ -315,16 +304,15 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [
-                "prop"
-              ],
+              "properties": {
+                "prop": true
+              },
               "settings": {}
             },
             "content": []
@@ -333,17 +321,16 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [
-                "prop1",
-                "prop2"
-              ],
+              "properties": {
+                "prop1": true,
+                "prop2": true
+              },
               "settings": {}
             },
             "content": []
@@ -352,14 +339,13 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {
                 "set": "42"
               }
@@ -370,14 +356,13 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {
                 "set": "42"
               }
@@ -388,14 +373,13 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {
                 "set": "42"
               }
@@ -406,14 +390,13 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {
                 "set": "42"
               }
@@ -424,16 +407,15 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [
-                "prop"
-              ],
+              "properties": {
+                "prop": true
+              },
               "settings": {
                 "baz": "quz",
                 "foo": "bar"
@@ -445,14 +427,13 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": [
@@ -466,14 +447,13 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": [
@@ -487,14 +467,13 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": [
@@ -502,7 +481,7 @@
                 "value": {
                   "name": "tag",
                   "metadata": {
-                    "properties": [],
+                    "properties": {},
                     "settings": {}
                   },
                   "content": [
@@ -521,16 +500,15 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [
-                "prop"
-              ],
+              "properties": {
+                "prop": true
+              },
               "settings": {
                 "baz": "quz",
                 "foo": "bar"
@@ -541,7 +519,7 @@
                 "value": {
                   "name": "tag",
                   "metadata": {
-                    "properties": [],
+                    "properties": {},
                     "settings": {}
                   },
                   "content": [
@@ -560,14 +538,13 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": []
@@ -576,18 +553,17 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [
-                "prop1",
-                "prop2",
-                "prop3"
-              ],
+              "properties": {
+                "prop1": true,
+                "prop2": true,
+                "prop3": true
+              },
               "settings": {
                 "set": "42"
               }
@@ -612,14 +588,13 @@
           "type": "text"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": []
@@ -635,7 +610,7 @@
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": []
@@ -651,7 +626,7 @@
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": []
@@ -663,7 +638,7 @@
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": []
@@ -684,7 +659,7 @@
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": [
@@ -693,14 +668,13 @@
                 "type": "text"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
                 "value": {
                   "name": "kind",
                   "metadata": {
-                    "properties": [],
+                    "properties": {},
                     "settings": {}
                   },
                   "content": [
@@ -714,7 +688,6 @@
                 "subtype": "inline"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
@@ -735,7 +708,7 @@
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": [
@@ -744,14 +717,13 @@
                 "type": "text"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
                 "value": {
                   "name": "kind",
                   "metadata": {
-                    "properties": [],
+                    "properties": {},
                     "settings": {}
                   },
                   "content": [
@@ -765,7 +737,6 @@
                 "subtype": "inline"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
@@ -773,7 +744,6 @@
                 "type": "text"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
@@ -781,7 +751,6 @@
                 "type": "text"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
@@ -794,7 +763,6 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
@@ -810,7 +778,7 @@
           "value": {
             "name": "tag",
             "metadata": {
-              "properties": [],
+              "properties": {},
               "settings": {}
             },
             "content": [
@@ -819,14 +787,13 @@
                 "type": "text"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
                 "value": {
                   "name": "kind",
                   "metadata": {
-                    "properties": [],
+                    "properties": {},
                     "settings": {}
                   },
                   "content": [
@@ -840,7 +807,6 @@
                 "subtype": "inline"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
@@ -848,7 +814,6 @@
                 "type": "text"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
@@ -856,7 +821,6 @@
                 "type": "text"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
@@ -869,7 +833,6 @@
           "subtype": "inline"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
@@ -883,7 +846,7 @@
       "value": {
         "name": "tag",
         "metadata": {
-          "properties": [],
+          "properties": {},
           "settings": {}
         },
         "content": [
@@ -894,14 +857,13 @@
                 "type": "text"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
                 "value": {
                   "name": "kind",
                   "metadata": {
-                    "properties": [],
+                    "properties": {},
                     "settings": {}
                   },
                   "content": [
@@ -915,7 +877,6 @@
                 "subtype": "inline"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
@@ -923,7 +884,6 @@
                 "type": "text"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
@@ -942,7 +902,7 @@
       "value": {
         "name": "block",
         "metadata": {
-          "properties": [],
+          "properties": {},
           "settings": {}
         },
         "content": [
@@ -953,7 +913,6 @@
                 "type": "text"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
@@ -961,14 +920,13 @@
                 "type": "text"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
                 "value": {
                   "name": "italic",
                   "metadata": {
-                    "properties": [],
+                    "properties": {},
                     "settings": {}
                   },
                   "content": [
@@ -982,7 +940,6 @@
                 "subtype": "inline"
               },
               {
-                "value": [],
                 "type": "break"
               },
               {
@@ -996,7 +953,7 @@
             "value": {
               "name": "block",
               "metadata": {
-                "properties": [],
+                "properties": {},
                 "settings": {}
               },
               "content": []
@@ -1008,9 +965,9 @@
             "value": {
               "name": "block",
               "metadata": {
-                "properties": [
-                  "prop"
-                ],
+                "properties": {
+                  "prop": true
+                },
                 "settings": {}
               },
               "content": [
@@ -1032,7 +989,7 @@
             "value": {
               "name": "block",
               "metadata": {
-                "properties": [],
+                "properties": {},
                 "settings": {
                   "set": "42"
                 }
@@ -1056,10 +1013,10 @@
             "value": {
               "name": "block",
               "metadata": {
-                "properties": [
-                  "prop1",
-                  "prop2"
-                ],
+                "properties": {
+                  "prop1": true,
+                  "prop2": true
+                },
                 "settings": {
                   "set": "42"
                 }
@@ -1088,11 +1045,11 @@
       "value": {
         "name": "block",
         "metadata": {
-          "properties": [
-            "prop1",
-            "prop2",
-            "prop3"
-          ],
+          "properties": {
+            "prop1": true,
+            "prop2": true,
+            "prop3": true
+          },
           "settings": {
             "set": "42"
           }
@@ -1116,7 +1073,7 @@
       "value": {
         "name": "lit",
         "metadata": {
-          "properties": [],
+          "properties": {},
           "settings": {}
         },
         "content": "#-block: ## this is treated literally!\n  This is the other kind of block tag.\n  It can have #italic{nested} block children.\n\n  #-block: ## this is treated literally!\n  #:\n\n  #-block[prop]:label ## this is treated literally!\n    Block starts/ends can have aribtrary labels attached.\n  #:label ## this is treated literally!\n\n  #-block[set='42']:label ## this is treated literally!\n    Block starts/ends can have aribtrary labels attached.\n  #:label ## this is treated literally!\n\n  #-block[prop1, set: '42', prop2]:label ## this is treated literally!\n    Block starts/ends can have aribtrary labels attached.\n  #:label ## this is treated literally!\n#: ## this is treated literally!"
@@ -1131,7 +1088,6 @@
           "type": "text"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
@@ -1139,7 +1095,6 @@
           "type": "text"
         },
         {
-          "value": [],
           "type": "break"
         },
         {
