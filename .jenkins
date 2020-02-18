@@ -6,15 +6,27 @@ pipeline {
     }
 
     stages {
+        stage('prepare') {
+            steps {
+                sh 'cabal v2-clean'
+            }
+        }
         stage('build') {
             steps {
-                sh 'cabal v2-build'
+                sh 'cabal v2-build --enable-documentation'
+            }
+        }
+        stage('test') {
+            steps {
                 sh 'cabal v2-test --test-options=--xml=test-report.xml'
             }
         }
     }
 
     post {
+        success {
+            archiveArtifacts 'dist-newstyle/build/*/ghc-*/prosidy-*/doc/html/prosidy/**'
+        }
         always {
             junit 'test-report.xml'
         }
