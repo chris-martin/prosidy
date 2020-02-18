@@ -1,11 +1,13 @@
 import Test.Tasty
--- import qualified Prosidy.Test.Prosidy
+import Test.Tasty.Runners.AntXML (antXMLRunner)
 import qualified Prosidy.Test.Source
 import qualified Prosidy.Test.Types
 import qualified Prosidy.Test.Parse
 
 main :: IO ()
-main = defaultMain =<< tests
+main = tests >>= defaultMainWithIngredients
+    [ antXMLRunner
+    ]
 
 tests :: IO TestTree
 tests = do
