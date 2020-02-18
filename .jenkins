@@ -5,6 +5,10 @@ pipeline {
         PATH = "/opt/cabal/bin:/opt/ghc/bin:$PATH"
     }
 
+    triggers {
+        githubPush()
+    }
+
     stages {
         stage('prepare') {
             steps {
