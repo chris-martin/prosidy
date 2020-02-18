@@ -9,8 +9,14 @@ pipeline {
         stage('build') {
             steps {
                 sh 'cabal v2-build'
-                sh 'cabal v2-test'
+                sh 'cabal v2-test --test-options=--xml=test-report.xml'
             }
+        }
+    }
+
+    post {
+        always {
+            junit 'test-report.xml'
         }
     }
 }
