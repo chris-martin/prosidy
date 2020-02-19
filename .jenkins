@@ -18,12 +18,14 @@ pipeline {
             }
         }
 
-        parallel {
-            stage('test') {
-                sh "cabal v2-test"
-            }
-            stage('docs') {
-                sh "./scripts/documentation-coverage"
+        stage('aux') {
+            parallel {
+                stage('test') {
+                    sh "cabal v2-test"
+                }
+                stage('docs') {
+                    sh "./scripts/documentation-coverage"
+                }
             }
         }
     }
