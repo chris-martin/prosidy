@@ -8,7 +8,9 @@ pipeline {
     stages {
         stage('configure') {
             steps {
-                sh "cabal v2-configure --jobs=\$ncpus --enable-tests --flags=+fatal-warnings --test-options=--xml=test-report.xml"
+                sh '''
+                    cabal v2-configure --jobs='$ncpus' --enable-tests --flags=+fatal-warnings --test-options=--xml=test-report.xml
+                '''
             }
         }
 
