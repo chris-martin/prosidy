@@ -5,24 +5,25 @@ pipeline {
         PATH = "/opt/cabal/bin:/opt/ghc/bin:$PATH"
     }
 
-    triggers {
-        githubPush()
-    }
-
     stages {
-        stage('prepare') {
+        stage('configure') {
             steps {
-                sh 'cabal v2-clean'
+                sh "cabal v2-configure --jobs=\$ncpus --enable-tests --flags=+fatal-warnings --test-options=--xml=test-report.xml"
             }
         }
+
         stage('build') {
             steps {
-                sh 'cabal v2-build --enable-documentation'
+                sh "cabal v2-build"
             }
         }
-        stage('test') {
-            steps {
-                sh 'cabal v2-test --test-options=--xml=test-report.xml'
+
+        parallel {
+            stage('test') {
+                sh "cabal v2-test"
+            }
+            stage('docs') {
+                sh "./scripts/documentation-coverage"
             }
         }
     }
@@ -33,6 +34,7 @@ pipeline {
         }
         always {
             junit 'test-report.xml'
+            deleteDir()
         }
     }
 }
