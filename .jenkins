@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'utdemir/ghc-musl:v4-integer-simple-ghc881'
+        }
+    }
 
     environment {
         PATH = "/opt/cabal/bin:/opt/ghc/bin:$PATH"
