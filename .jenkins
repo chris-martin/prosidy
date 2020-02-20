@@ -2,17 +2,20 @@ pipeline {
     agent {
         docker {
             image 'utdemir/ghc-musl:v4-integer-simple-ghc881'
+            args '--volume cabal:/cabal'
         }
     }
 
     environment {
         PATH = "/opt/cabal/bin:/opt/ghc/bin:$PATH"
+        CABAL_DIR = "/cabal/cabal"
     }
 
     stages {
         stage('configure') {
             steps {
                 sh '''
+                    cabal v2-update
                     cabal v2-configure --jobs='$ncpus' --enable-tests --flags=+fatal-warnings --test-options=--xml=test-report.xml
                 '''
             }
