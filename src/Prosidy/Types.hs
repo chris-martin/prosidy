@@ -138,9 +138,13 @@ instance ToJSON Document where
         , "content"  .= ct
         ]
 
+-- | Convert a 'Document' to a 'Region'. The resulting 'Region' will never have
+-- a 'Location' attached. 
 documentToRegion :: Document -> Region (Series Block)
 documentToRegion (Document md ct) = Region md ct Nothing
 
+-- | Convert a 'Region' to a 'Document'. Any 'Location' on the 'Region' will be
+-- discarded.
 regionToDocument :: Region (Series Block) -> Document
 regionToDocument (Region md ct _) = Document md ct
 
@@ -148,8 +152,16 @@ regionToDocument (Region md ct _) = Document md ct
 -- | A sum type enumerating allowed types inside of an inline context.
 data Inline =
     Break
+    -- ^ Spacing recorded between lines or on either side of an 'Inline' 'Tag'.
+    -- Although we could represent this as 'Text', Prosidy defines a special
+    -- node for this case so that authors in CJK languages (or other languages
+    -- without explicit spaces between words) may simply ignore these spaces
+    -- in their output.
   | InlineTag  InlineTag
+    -- ^ A 'Tag' which contains only 'Inline' items. These tags begin with the
+    -- @#@ sigil in source.
   | InlineText Text
+    -- ^ A fragment of plain text.
   deriving stock (Eq, Show, Generic)
   deriving anyclass (Hashable, Binary, NFData)
 
@@ -295,12 +307,22 @@ instance ToJSON a => ToJSON (Tag a) where
         , "content"  .= ct
         ]
 
+-- | A 'Tag' containing zero or more 'Block' items. 
+-- Specified in Prosidy source with the @#-@ sigil.
 type BlockTag   = Tag (Series Block)
+
+-- | A 'Tag' containing zero or more 'Inline' items.
+-- Specified in Prosidy source with the @#@ sigil.
 type InlineTag  = Tag (Series Inline)
+
+-- | A 'Tag' containing a single plain-text item.
+-- Specified in Prosidy source with the @#=@ sigil.
 type LiteralTag = Tag Text
 
+-- | Convert a 'Tag' to a 'Region' by discarding the tag's name.
 tagToRegion :: Tag a -> Region a
 tagToRegion (Tag _ md ct loc) = Region md ct loc
 
+-- | Convert a 'Region' to a 'Tag' by providing a tag name.
 regionToTag :: Key -> Region a -> Tag a
 regionToTag name (Region md ct loc) = Tag name md ct loc

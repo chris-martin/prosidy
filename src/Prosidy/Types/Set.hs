@@ -26,6 +26,9 @@ import Data.Hashable (Hashable(..))
 import qualified Data.HashSet as HS
 import qualified Data.HashMap.Strict as HM
 
+-- | A newtype wrapper around an unordered collection of unique elements.
+--
+-- Currently, this is implemented as a wrapper around a 'HashSet'.
 newtype Set a = Set (HashSet a)
   deriving stock (Generic)
   deriving newtype (Eq, Foldable, Show, NFData, Semigroup, Monoid, Hashable)
@@ -46,11 +49,15 @@ instance (Eq a, Hashable a, Binary a) => Binary (Set a) where
     put (Set s) =
         put $ HS.toList s
 
-asHashSet :: (HashSet a -> HashSet b) -> Set a -> Set b
-asHashSet f (Set s) = Set (f s)
+-- | Given a function which operates on 'HashSet's, return a function which
+-- performs the same operation on a 'Set'.
+asHashSet :: Functor f => (HashSet a -> f (HashSet b)) -> Set a -> f (Set b)
+asHashSet f (Set s) = Set <$> f s
 
+-- | Convert a 'Set' to a 'HashSet'.
 toHashSet :: Set a -> HashSet a
 toHashSet (Set s) = s
 
+-- | Convert a 'HashSet' to a 'Set'.
 fromHashSet :: HashSet a -> Set a
 fromHashSet = Set

@@ -18,6 +18,8 @@ module Prosidy.Optics.Types
     , atSetting
       -- ** Items wrapping content
     , HasContent(..)
+      -- * Conversion between 'Tag's and 'Region's.
+    , tagged
       -- * Prisms on 'Block' contexts
     , _BlockTag
     , _BlockLiteral
@@ -50,6 +52,8 @@ import qualified Data.HashMap.Strict as HM
 import qualified Data.HashSet as HS
 
 -------------------------------------------------------------------------------
+-- | A classy optic for focusing on items with 'Metadata', including 'Tag's,
+-- 'Region's, and 'Document's.
 class HasMetadata t where
     metadata :: Lens' t Metadata
 
@@ -69,6 +73,7 @@ instance HasMetadata Metadata where
     metadata = id
     {-# INLINE metadata #-}
 
+-- | Fetch all properties from items which contain metadata.
 properties :: HasMetadata m => Lens' m (Set Key)
 properties = metadata . lens metadataProperties (\m p -> m{metadataProperties = p})
 {-# INLINEABLE properties #-}
@@ -77,6 +82,7 @@ properties = metadata . lens metadataProperties (\m p -> m{metadataProperties = 
 {-# SPECIALIZE INLINE properties :: Lens' (Tag a)    (Set Key) #-}
 {-# SPECIALIZE INLINE properties :: Lens' (Region a) (Set Key) #-}
 
+-- | Fetch all settings defined on items which contain metadata.
 settings :: HasMetadata m => Lens' m (Assoc Key Text)
 settings = metadata . lens metadataSettings (\m s -> m{metadataSettings = s})
 {-# INLINABLE settings #-}
@@ -85,18 +91,27 @@ settings = metadata . lens metadataSettings (\m s -> m{metadataSettings = s})
 {-# SPECIALIZE INLINE settings :: Lens' (Tag a)    (Assoc Key Text) #-}
 {-# SPECIALIZE INLINE settings :: Lens' (Region a) (Assoc Key Text) #-}
 
+-- | Check if a property is attached to an item with metadata. Using this
+-- optic as a setter will add a property if set to 'True' and remove the
+-- property when set to 'False'.
 hasProperty :: HasMetadata m => Key -> Lens' m Bool
 hasProperty k = properties . _Set . lens (HS.member k) 
     (\hs b -> (if b then HS.insert else HS.delete) k hs)
 {-# INLINE hasProperty #-}
 
+-- | Select a setting from an item attached to metadata. Returns 'Nothing' if
+-- no value is set.
 atSetting :: HasMetadata m => Key -> Lens' m (Maybe Text)
 atSetting k = settings . _Assoc . lens (HM.lookup k)
     (\hm x -> maybe (HM.delete k) (HM.insert k) x hm)
 {-# INLINE atSetting #-}
 
 -------------------------------------------------------------------------------
+-- | An optic for selecting children of an item in a recursive structure.
 class HasContent t where
+    -- | The type of /all/ of the children collectively. For instance,
+    -- @type Content Document = Series Block@, as 'Document' has zero or more
+    -- contained 'Block's.
     type Content t
     content :: Lens' t (Content t)
 
@@ -121,31 +136,47 @@ instance HasContent Paragraph where
     {-# INLINE content #-}
 
 -------------------------------------------------------------------------------
+-- | Focus on the inner 'Region' of 'Tag's with a name. This can be used to
+-- filter 'Tag's to a specific subset for manipulation.
+tagged :: Key -> Prism' (Tag a) (Region a)
+tagged k = prism' (regionToTag k) $ \tag ->
+    if tagName tag == k
+    then Just $ tagToRegion tag
+    else Nothing
+{-# INLINE tagged #-}
+
+-------------------------------------------------------------------------------
+-- | Focus only on block tags.
 _BlockTag :: Prism' Block BlockTag
 _BlockTag = prism' BlockTag $ \case
     BlockTag t -> Just t
     _          -> Nothing
 
+-- | Focus only on paragraphs'
 _BlockParagraph :: Prism' Block Paragraph
 _BlockParagraph = prism' BlockParagraph $ \case
     BlockParagraph p -> Just p 
     _                -> Nothing
 
+-- | Focus only on literal tags.
 _BlockLiteral :: Prism' Block LiteralTag
 _BlockLiteral = prism' BlockLiteral $ \case
     BlockLiteral t -> Just t
     _              -> Nothing
 
+-- | Focus only on inline tags.
 _InlineTag :: Prism' Inline InlineTag
 _InlineTag = prism' InlineTag $ \case
     InlineTag t -> Just t
     _           -> Nothing
 
+-- | Focus only on text nodes.
 _Text :: Prism' Inline Text
 _Text = prism' InlineText $ \case
     InlineText t -> Just t
     _            -> Nothing
 
+-- | Focus only on breaks.
 _Break :: Prism' Inline ()
 _Break = prism' (const Break) $ \case
     Break -> Just ()

@@ -1,6 +1,6 @@
 cabal-version: 2.4
 name:          prosidy
-version:       1.5.0.0-rc1
+version:       1.5.0.0
 synopsis:      A simple language for writing documents.
 license:       MPL-2.0
 license-file:  LICENSE
