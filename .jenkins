@@ -44,12 +44,8 @@ pipeline {
     }
 
     post {
-        success {
-            archiveArtifacts 'dist-newstyle/build/*/ghc-*/prosidy-*/doc/html/prosidy/**'
-        }
         always {
             junit 'test-report.xml'
-            deleteDir()
         }
     }
 }
