@@ -33,6 +33,17 @@ We'd recommend you have both installed before building,
 although it may work without both.
 
 #-h{Changelog}
+#-h+{2020-02-22}
+#-list:
+  #-item{Large refactor to allow unopinionated use of this library. Optics are no longer "basically required".}
+  #-item{Full documentation of the public-facing API.}
+#:
+
+#-h+{2020-02-15}
+#-list:
+  #-item{Pulled apart the monorepo again to allow for uploading to Hackage.}
+#:
+
 #-h+{2020-01-28}
 #-list:
   #-item{Fixed a few parser errors, specifically around comments.}
