@@ -1,3 +1,4 @@
+---
 kind: pipeline
 type: docker
 name: default
@@ -21,3 +22,6 @@ volumes:
   - name: cabal-cache
     host:
       path: /var/cache/cabal
+---
+kind: signature
+hmac: 9a0240bd67cd55e50f70e815511b142f28047d3f10d3e16c88defad130202b22
