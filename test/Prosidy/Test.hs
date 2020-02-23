@@ -5,9 +5,11 @@ import qualified Prosidy.Test.Types
 import qualified Prosidy.Test.Parse
 
 main :: IO ()
-main = tests >>= defaultMainWithIngredients
-    [ antXMLRunner
-    ]
+main = tests >>= defaultMainWithIngredients ingredients
+  where
+    ingredients = defaultIngredients ++
+        [ antXMLRunner
+        ]
 
 tests :: IO TestTree
 tests = do
