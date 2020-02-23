@@ -24,6 +24,9 @@ module Prosidy.Parse
     )
 where
 
+import Prosidy.Compat
+import Prelude hiding (fail)
+
 import           Prosidy.Types
 import           Prosidy.Source
 import Prosidy.Types.Key (isValidKeyHead, isValidKeyTail, unsafeMakeKey)

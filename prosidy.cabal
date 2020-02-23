@@ -8,11 +8,15 @@ author:        James Alexander Feldman-Crough
 maintainer:    alex@fldcr.com
 copyright:     ©2020 to James Alexander Feldman-Crough
 category:      Language
-tested-with:   GHC == 8.8.1
 data-dir:      data
 data-files:    golden/**/*.pro, golden/**/*.json
 
-description:   
+tested-with:
+    GHC == 8.4.4
+  , GHC == 8.6.5
+  , GHC == 8.8.1
+
+description:
     Prosidy is a small language for writing documents.
     More details are on its site at https://prosidy.org.
 
@@ -31,14 +35,14 @@ library
     hs-source-dirs:   src
 
     ghc-options:
-        -Wall 
+        -Wall
         -Wno-name-shadowing
 
     if flag(fatal-warnings)
         ghc-options:
             -Werror
 
-    exposed-modules:  
+    exposed-modules:
         Prosidy
       , Prosidy.Optics
       , Prosidy.Optics.Source
@@ -53,9 +57,10 @@ library
 
     other-modules:
         Prosidy.Optics.Internal
+      , Prosidy.Compat
 
     build-depends:
-        base                 >= 4.12 && < 5
+        base                 >= 4.11 && < 5
       , aeson                >= 1.4  && < 1.5
       , bytestring           >= 0.10 && < 0.11
       , binary               >= 0.8  && < 0.9
@@ -66,7 +71,6 @@ library
       , megaparsec           >= 7.0  && < 8.1
       , profunctors          >= 5.3  && < 5.6
       , tagged               >= 0.8  && < 0.9
-      , template-haskell     >= 2.14 && < 2.16
       , text                 >= 1.2  && < 1.3
       , transformers         >= 0.5  && < 0.6
       , vector               >= 0.12 && < 0.13
@@ -79,7 +83,7 @@ test-suite prosidy-test
     hs-source-dirs:   test
 
     ghc-options:
-        -Wall 
+        -Wall
         -Wno-name-shadowing
 
     main-is:

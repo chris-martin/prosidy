@@ -4,7 +4,7 @@ type: docker
 name: default
 
 steps:
-- name: ghc 8.8
+- name: configure
   image: utdemir/ghc-musl:v4-integer-simple-ghc881
   environment:
     CABAL_DIR: /cabal
@@ -13,9 +13,39 @@ steps:
     path: /cabal
   commands:
   - cabal v2-update
-  - cabal v2-configure --jobs \$ncpus --enable-tests
+  - cabal v2-configure --jobs \$ncpus --enable-tests --flags +fatal-warnings
+
+- &default-steps
+  name: ghc 8.8.1
+  image: utdemir/ghc-musl:v4-integer-simple-ghc881
+  depends_on: [configure]
+  environment:
+    CABAL_DIR: /cabal
+  volumes:
+  - name: cabal-cache
+    path: /cabal
+  commands:
   - cabal v2-build
   - cabal v2-test
+
+- <<: *default-steps
+  name: ghc 8.6.5
+  image: utdemir/ghc-musl:v4-integer-simple-ghc865
+
+- <<: *default-steps
+  name: ghc 8.4.4
+  image: utdemir/ghc-musl:v4-libgmp-ghc844
+
+- name: docs
+  image: utdemir/ghc-musl:v4-integer-simple-ghc881
+  depends_on: 
+  - ghc 8.8.1
+  environment:
+    CABAL_DIR: /cabal
+  volumes:
+  - name: cabal-cache
+    path: /cabal
+  commands:
   - ./scripts/documentation-coverage
 
 volumes:
@@ -24,4 +54,6 @@ volumes:
       path: /var/cache/cabal
 ---
 kind: signature
-hmac: 9a0240bd67cd55e50f70e815511b142f28047d3f10d3e16c88defad130202b22
+hmac: 1e74f88acdb8fc6c09cee53f2b1016b5820ed05ae783e751c31d7f5aac3e2279
+
+...
