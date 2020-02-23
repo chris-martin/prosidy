@@ -1,0 +1,23 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: ghc 8.8
+  image: utdemir/ghc-musl:v4-integer-simple-ghc881
+  environment:
+    CABAL_DIR: /cabal
+  volumes:
+  - name: cabal-cache
+    path: /cabal
+  commands:
+  - cabal v2-update
+  - cabal v2-configure --jobs \$ncpus --enable-tests
+  - cabal v2-build
+  - cabal v2-test
+  - ./scripts/documentation-coverage
+
+volumes:
+  - name: cabal-cache
+    host:
+      path: /var/cache/cabal
