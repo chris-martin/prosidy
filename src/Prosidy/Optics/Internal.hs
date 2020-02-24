@@ -7,13 +7,14 @@ Maintainer  : alex@fldcr.com
 -}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TupleSections #-}
-module Prosidy.Optics.Internal 
-  ( module Prosidy.Optics.Internal
-  , Profunctor(..)
-  , Choice(..)
-  , Strong(..)
-  , Contravariant(..)
-  ) where
+module Prosidy.Optics.Internal
+    ( module Prosidy.Optics.Internal
+    , Profunctor(..)
+    , Choice(..)
+    , Strong(..)
+    , Contravariant(..)
+    )
+where
 
 import           Data.Profunctor                ( Profunctor(..)
                                                 , Choice(..)
@@ -25,23 +26,25 @@ import           Data.Monoid                    ( First(..)
                                                 )
 import           Data.Functor.Identity          ( Identity(..) )
 import           Data.Tagged                    ( Tagged(..) )
-import Data.Functor.Contravariant (Contravariant(..))
+import           Data.Functor.Contravariant     ( Contravariant(..) )
 
 type Optic p f s t a b = p a (f b) -> p s (f t)
-type Iso       s t a b = forall p f. (Profunctor p, Functor f)           => Optic p    f s t a b
-type Lens      s t a b = forall p f. (Strong p, Functor f)               => Optic p    f s t a b
-type Prism     s t a b = forall p f. (Choice p, Applicative f)           => Optic p    f s t a b
-type Affine    s t a b = forall p f. (Choice p, Strong p, Applicative f) => Optic p    f s t a b
-type Traversal s t a b = forall   f. (Applicative f)                     => Optic (->) f s t a b
+type Iso s t a b = forall p f . (Profunctor p, Functor f) => Optic p f s t a b
+type Lens s t a b = forall p f . (Strong p, Functor f) => Optic p f s t a b
+type Prism s t a b
+    = forall p f . (Choice p, Applicative f) => Optic p f s t a b
+type Affine s t a b
+    = forall p f . (Choice p, Strong p, Applicative f) => Optic p f s t a b
+type Traversal s t a b = forall f . (Applicative f) => Optic (->) f s t a b
 
 type Optic' p f s a = Optic p f s s a a
-type Iso'       s a = Iso       s s a a
-type Lens'      s a = Lens      s s a a
-type Prism'     s a = Prism     s s a a
-type Affine'    s a = Affine    s s a a
+type Iso' s a = Iso s s a a
+type Lens' s a = Lens s s a a
+type Prism' s a = Prism s s a a
+type Affine' s a = Affine s s a a
 type Traversal' s a = Traversal s s a a
 
-type Getter s a = forall f. (Functor f, Contravariant f) => Optic' (->) f s a
+type Getter s a = forall f . (Functor f, Contravariant f) => Optic' (->) f s a
 
 iso :: (s -> a) -> (b -> t) -> Iso s t a b
 iso get set = dimap get (fmap set)
@@ -55,9 +58,7 @@ lens get set = dimap into outof . second'
 {-# INLINE lens #-}
 
 prism :: (b -> t) -> (s -> Either t a) -> Prism s t a b
-prism set get = dimap get rhs . right'
-  where
-    rhs = either pure (fmap set)
+prism set get = dimap get rhs . right' where rhs = either pure (fmap set)
 {-# INLINE prism #-}
 
 prism' :: (b -> s) -> (s -> Maybe a) -> Prism s s a b
@@ -70,7 +71,7 @@ prism' set get = dimap lhs rhs . right'
 affine :: (s -> Either t a) -> (s -> b -> t) -> Affine s t a b
 affine get set = dimap lhs rhs . right' . second'
   where
-    lhs x = fmap (x,) $ get x
+    lhs x = fmap (x, ) $ get x
     rhs = either pure (\(x, f) -> set x <$> f)
 {-# INLINE affine #-}
 

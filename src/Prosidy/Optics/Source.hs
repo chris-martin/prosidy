@@ -16,11 +16,12 @@ module Prosidy.Optics.Source
 
       -- * Conversion utilities
     , sparse
-    ) where
+    )
+where
 
-import Prosidy.Types
-import Prosidy.Source
-import Prosidy.Optics.Internal
+import           Prosidy.Types
+import           Prosidy.Source
+import           Prosidy.Optics.Internal
 
 -- | A classy optic for selecting the 'Location' from a value. Note that
 -- 'location' is affine: a 'Location' can't be attached to a value which does 
@@ -34,27 +35,31 @@ instance HasLocation Location where
     {-# INLINE location #-}
 
 instance HasLocation (Tag a) where
-    location = affine' tagLocation (\d l -> d{tagLocation = Just l})
+    location = affine' tagLocation (\d l -> d { tagLocation = Just l })
     {-# INLINE location #-}
 
 instance HasLocation (Region a) where
-    location = affine' regionLocation (\d l -> d{regionLocation = Just l})
+    location = affine' regionLocation (\d l -> d { regionLocation = Just l })
     {-# INLINE location #-}
 
 instance HasLocation Paragraph where
-    location = affine' paragraphLocation (\d l -> d{paragraphLocation = Just l})
+    location =
+        affine' paragraphLocation (\d l -> d { paragraphLocation = Just l })
     {-# INLINE location #-}
 
 -- | Focus on the 'Offset' from a value parsed from a source file. If the 
 -- 'Offset' is modified, note that the resulting 'column' and 'line' will /also/ be
 -- modified as they are denormalizations of this value.
 offset :: HasLocation l => Affine' l Offset
-offset = location . sparse . lens sparseLocationOffset (\sl x -> sl{sparseLocationOffset=x}) 
+offset = location . sparse . lens
+    sparseLocationOffset
+    (\sl x -> sl { sparseLocationOffset = x })
 {-# INLINE offset #-}
 
 -- | Fetch the 'Column' from a value parsed from a source file. Modifications
 -- are not allowed as the 'offset' and 'line' may become inconsistent.
-column :: (HasLocation l, Contravariant f, Applicative f) => Optic' (->) f l Column
+column
+    :: (HasLocation l, Contravariant f, Applicative f) => Optic' (->) f l Column
 column = location . to locationColumn
 {-# INLINE column #-}
 
@@ -66,7 +71,8 @@ line = location . to locationLine
 
 -- | Fetch the 'Source' a value was parsed from. Modifications are not allowed 
 -- as the 'line', 'offset', and 'column' may become inconsistent.
-source :: (HasLocation l, Contravariant f, Applicative f) => Optic' (->) f l Source
+source
+    :: (HasLocation l, Contravariant f, Applicative f) => Optic' (->) f l Source
 source = location . to locationSource
 {-# INLINE source #-}
 

@@ -18,7 +18,7 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE StrictData #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE UndecidableInstances #-}
-module Prosidy.Types 
+module Prosidy.Types
     ( -- * Documents
       Document(..)
     , documentToRegion
@@ -39,23 +39,42 @@ module Prosidy.Types
     , Metadata(..)
     , Region(..)
       -- * Utility wrappers
-    , module X 
-    ) where
+    , module X
+    )
+where
 
-import Prosidy.Types.Assoc as X (Assoc(..))
-import Prosidy.Types.Key as X (Key, KeyError(..), InvalidCharacter, makeKey, rawKey)
-import Prosidy.Types.Series as X (Series(..), SeriesNE)
-import Prosidy.Types.Set as X (Set(..))
-import Prosidy.Source (Location)
+import           Prosidy.Types.Assoc           as X
+                                                ( Assoc(..) )
+import           Prosidy.Types.Key             as X
+                                                ( Key
+                                                , KeyError(..)
+                                                , InvalidCharacter
+                                                , makeKey
+                                                , rawKey
+                                                )
+import           Prosidy.Types.Series          as X
+                                                ( Series(..)
+                                                , SeriesNE
+                                                )
+import           Prosidy.Types.Set             as X
+                                                ( Set(..) )
+import           Prosidy.Source                 ( Location )
 
-import Data.Text (Text)
-import GHC.Generics (Generic)
-import Control.DeepSeq (NFData)
-import Data.Binary (Binary)
-import Data.Hashable (Hashable)
-import Data.Aeson (ToJSON(..), FromJSON(..), withObject, (.:), (.=), object, pairs)
+import           Data.Text                      ( Text )
+import           GHC.Generics                   ( Generic )
+import           Control.DeepSeq                ( NFData )
+import           Data.Binary                    ( Binary )
+import           Data.Hashable                  ( Hashable )
+import           Data.Aeson                     ( ToJSON(..)
+                                                , FromJSON(..)
+                                                , withObject
+                                                , (.:)
+                                                , (.=)
+                                                , object
+                                                , pairs
+                                                )
 
-import qualified Data.Aeson as Aeson
+import qualified Data.Aeson                    as Aeson
 
 -------------------------------------------------------------------------------
 -- | A sum type enumerating allowed types inside of a block context.
@@ -77,39 +96,33 @@ instance FromJSON Block where
                     "literal" -> BlockLiteral <$> o .: "value"
                     _         -> fail $ "unknown tag subtype: " <> show subtype
             "paragraph" -> BlockParagraph <$> o .: "value"
-            _ -> fail $ "unknown block type: " <> show ty
+            _           -> fail $ "unknown block type: " <> show ty
 
 instance ToJSON Block where
     toEncoding b = pairs . mconcat $ case b of
-        BlockLiteral t -> 
+        BlockLiteral t ->
             [ "type" .= ("tag" :: Text)
-            , "subtype" .= ("literal" :: Text) 
-            , "value" .= t 
+            , "subtype" .= ("literal" :: Text)
+            , "value" .= t
             ]
-        BlockParagraph p ->
-            [ "type" .= ("paragraph" :: Text)
-            , "value" .= p
-            ]
-        BlockTag t -> 
+        BlockParagraph p -> ["type" .= ("paragraph" :: Text), "value" .= p]
+        BlockTag t ->
             [ "type" .= ("tag" :: Text)
-            , "subtype" .= ("block" :: Text) 
-            , "value" .= t 
+            , "subtype" .= ("block" :: Text)
+            , "value" .= t
             ]
 
     toJSON b = object $ case b of
-        BlockLiteral t -> 
+        BlockLiteral t ->
             [ "type" .= ("tag" :: Text)
-            , "subtype" .= ("literal" :: Text) 
-            , "value" .= t 
+            , "subtype" .= ("literal" :: Text)
+            , "value" .= t
             ]
-        BlockParagraph p ->
-            [ "type" .= ("paragraph" :: Text)
-            , "value" .= p
-            ]
-        BlockTag t -> 
+        BlockParagraph p -> ["type" .= ("paragraph" :: Text), "value" .= p]
+        BlockTag t ->
             [ "type" .= ("tag" :: Text)
-            , "subtype" .= ("block" :: Text) 
-            , "value" .= t 
+            , "subtype" .= ("block" :: Text)
+            , "value" .= t
             ]
 
 -------------------------------------------------------------------------------
@@ -122,20 +135,14 @@ data Document = Document
   deriving anyclass (Hashable, NFData, Binary)
 
 instance FromJSON Document where
-    parseJSON = withObject "Document" $ \o -> Document
-        <$> o .: "metadata"
-        <*> o .: "content"
+    parseJSON = withObject "Document"
+        $ \o -> Document <$> o .: "metadata" <*> o .: "content"
 
 instance ToJSON Document where
-    toEncoding (Document md ct) = pairs $ mconcat
-        [ "metadata" .= md
-        , "content"  .= ct
-        ]
+    toEncoding (Document md ct) =
+        pairs $ mconcat ["metadata" .= md, "content" .= ct]
 
-    toJSON (Document md ct) = object
-        [ "metadata" .= md
-        , "content"  .= ct
-        ]
+    toJSON (Document md ct) = object ["metadata" .= md, "content" .= ct]
 
 -- | Convert a 'Document' to a 'Region'. The resulting 'Region' will never have
 -- a 'Location' attached. 
@@ -169,39 +176,28 @@ instance FromJSON Inline where
         ty <- o .: "type"
         case ty :: Text of
             "break" -> pure Break
-            "tag"   -> InlineTag  <$> o .: "value"
+            "tag"   -> InlineTag <$> o .: "value"
             "text"  -> InlineText <$> o .: "value"
             _       -> fail $ "unknown inline type: " <> show ty
 
 instance ToJSON Inline where
     toEncoding i = pairs . mconcat $ case i of
-        Break        -> 
-            [ "type" .= ("break" :: Text)
-            , "value" .= Aeson.Null
-            ]
-        InlineTag  t -> 
-            [ "type"    .= ("tag" :: Text)
+        Break -> ["type" .= ("break" :: Text), "value" .= Aeson.Null]
+        InlineTag t ->
+            [ "type" .= ("tag" :: Text)
             , "subtype" .= ("inline" :: Text)
-            , "value"   .= t
-            ]
-        InlineText t -> 
-            [ "type"  .= ("text" :: Text) 
             , "value" .= t
             ]
+        InlineText t -> ["type" .= ("text" :: Text), "value" .= t]
 
     toJSON i = object $ case i of
-        Break        -> 
-            [ "type"  .= ("break" :: Text)
-            ]
-        InlineTag  t -> 
-            [ "type"    .= ("tag" :: Text)
+        Break -> ["type" .= ("break" :: Text)]
+        InlineTag t ->
+            [ "type" .= ("tag" :: Text)
             , "subtype" .= ("inline" :: Text)
-            , "value"   .= t
-            ]
-        InlineText t -> 
-            [ "type"  .= ("text" :: Text) 
             , "value" .= t
             ]
+        InlineText t -> ["type" .= ("text" :: Text), "value" .= t]
 
 -------------------------------------------------------------------------------
 -- | A set of properties and settings, associated with a 'Region'. 
@@ -209,7 +205,7 @@ instance ToJSON Inline where
 -- The namespaces of properties and settings are distinct; a property can share
 -- a name with a setting without conflict.
 data Metadata = Metadata
-    { metadataProperties :: Set Key 
+    { metadataProperties :: Set Key
       -- ^ Properties are a set of 'Key's with no associated value.
     , metadataSettings   :: Assoc Key Text
       -- ^ Settings are 'Key's with an attached value.
@@ -221,30 +217,23 @@ instance Monoid Metadata where
     mempty = Metadata mempty mempty
 
 instance Semigroup Metadata where
-    Metadata p1 s1 <> Metadata p2 s2 =
-        Metadata (p1 <> p2) (s1 <> s2)
+    Metadata p1 s1 <> Metadata p2 s2 = Metadata (p1 <> p2) (s1 <> s2)
 
 instance FromJSON Metadata where
-    parseJSON = withObject "Metadata" $ \o -> Metadata
-        <$> o .: "properties"
-        <*> o .: "settings"
+    parseJSON = withObject "Metadata"
+        $ \o -> Metadata <$> o .: "properties" <*> o .: "settings"
 
 instance ToJSON Metadata where
-    toEncoding (Metadata ps ss) = pairs $ mconcat
-        [ "properties" .= ps 
-        , "settings"   .= ss
-        ]
+    toEncoding (Metadata ps ss) =
+        pairs $ mconcat ["properties" .= ps, "settings" .= ss]
 
-    toJSON (Metadata ps ss) = object
-        [ "properties" .= ps 
-        , "settings"   .= ss
-        ]
+    toJSON (Metadata ps ss) = object ["properties" .= ps, "settings" .= ss]
 
 -------------------------------------------------------------------------------
 -- | A non-empty collection of 'Inline' items. A 'Paragraph' represents the
 -- border between block and inline contexts. All ancestors of a paragraph are
 -- block items or a document, and all children are inline items.
-data Paragraph = Paragraph 
+data Paragraph = Paragraph
     { paragraphContent  :: SeriesNE Inline
     , paragraphLocation :: Maybe Location
     }
@@ -256,7 +245,7 @@ instance FromJSON Paragraph where
 
 instance ToJSON Paragraph where
     toEncoding (Paragraph s _) = toEncoding s
-    toJSON     (Paragraph s _) = toJSON s
+    toJSON (Paragraph s _) = toJSON s
 
 -------------------------------------------------------------------------------
 -- | An untagged structural grouping of items with type @a@. Regions do not
@@ -270,10 +259,7 @@ data Region a = Region
   deriving anyclass (Hashable, NFData, Binary)
 
 instance ToJSON a => ToJSON (Region a) where
-    toJSON (Region md ct _) = Aeson.object
-        [ "metadata" .= md
-        , "content"  .= ct
-        ]
+    toJSON (Region md ct _) = Aeson.object ["metadata" .= md, "content" .= ct]
 
 -------------------------------------------------------------------------------
 -- | A 'Region', annotated with a tag name.
@@ -287,32 +273,30 @@ data Tag a = Tag
   deriving anyclass (Hashable, NFData, Binary)
 
 instance FromJSON a => FromJSON (Tag a) where
-    parseJSON = withObject "Tag" $ \o -> Tag 
-        <$> o .: "name"
-        <*> o .: "metadata"
-        <*> o .: "content"
-        <*> pure Nothing
+    parseJSON = withObject "Tag" $ \o ->
+        Tag
+            <$> o
+            .:  "name"
+            <*> o
+            .:  "metadata"
+            <*> o
+            .:  "content"
+            <*> pure Nothing
 
 instance ToJSON a => ToJSON (Tag a) where
-    toEncoding (Tag nm md ct _) = pairs $ mconcat
-        [ "name"     .= nm
-        , "metadata" .= md
-        , "content"  .= ct
-        ]
+    toEncoding (Tag nm md ct _) =
+        pairs $ mconcat ["name" .= nm, "metadata" .= md, "content" .= ct]
 
-    toJSON (Tag nm md ct _) = object
-        [ "name"     .= nm
-        , "metadata" .= md
-        , "content"  .= ct
-        ]
+    toJSON (Tag nm md ct _) =
+        object ["name" .= nm, "metadata" .= md, "content" .= ct]
 
 -- | A 'Tag' containing zero or more 'Block' items. 
 -- Specified in Prosidy source with the @#-@ sigil.
-type BlockTag   = Tag (Series Block)
+type BlockTag = Tag (Series Block)
 
 -- | A 'Tag' containing zero or more 'Inline' items.
 -- Specified in Prosidy source with the @#@ sigil.
-type InlineTag  = Tag (Series Inline)
+type InlineTag = Tag (Series Inline)
 
 -- | A 'Tag' containing a single plain-text item.
 -- Specified in Prosidy source with the @#=@ sigil.

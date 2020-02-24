@@ -9,21 +9,20 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
-module Prosidy.Types.Set 
-    ( Set(..)
-    , asHashSet
-    , fromHashSet
-    , toHashSet
-    ) where
+module Prosidy.Types.Set (Set(..), asHashSet, fromHashSet, toHashSet) where
 
-import Data.HashSet (HashSet)
-import GHC.Generics (Generic)
-import Data.Aeson (FromJSONKey, ToJSONKey, ToJSON(..), FromJSON(..))
-import Control.DeepSeq (NFData)
-import Data.Binary (Binary(..))
-import Data.Hashable (Hashable(..))
-import qualified Data.HashSet as HS
-import qualified Data.HashMap.Strict as HM
+import           Data.HashSet                   ( HashSet )
+import           GHC.Generics                   ( Generic )
+import           Data.Aeson                     ( FromJSONKey
+                                                , ToJSONKey
+                                                , ToJSON(..)
+                                                , FromJSON(..)
+                                                )
+import           Control.DeepSeq                ( NFData )
+import           Data.Binary                    ( Binary(..) )
+import           Data.Hashable                  ( Hashable(..) )
+import qualified Data.HashSet                  as HS
+import qualified Data.HashMap.Strict           as HM
 
 -- | A newtype wrapper around an unordered collection of unique elements.
 --
@@ -42,11 +41,9 @@ instance (Hashable a, Eq a, FromJSONKey a) => FromJSON (Set a) where
         pure . Set . HM.keysSet $ HM.filter id m
 
 instance (Eq a, Hashable a, Binary a) => Binary (Set a) where
-    get =
-        Set . HS.fromList <$> get
-    
-    put (Set s) =
-        put $ HS.toList s
+    get = Set . HS.fromList <$> get
+
+    put (Set s) = put $ HS.toList s
 
 -- | Given a function which operates on 'HashSet's, return a function which
 -- performs the same operation on a 'Set'.

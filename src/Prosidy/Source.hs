@@ -14,43 +14,47 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE StrictData #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
-module Prosidy.Source 
-  ( Source(..)
-  , Location
-  , SparseLocation(..)
-  , LineMap
-  , Offset(..)
-  , Line(..)
-  , Column(..)
+module Prosidy.Source
+    ( Source(..)
+    , Location
+    , SparseLocation(..)
+    , LineMap
+    , Offset(..)
+    , Line(..)
+    , Column(..)
+    , locationSource
+    , locationColumn
+    , locationLine
+    , locationOffset
+    , makeSource
+    , getSourceLine
+    , getLocation
+    , enrichLocation
+    , stripLocation
+    , lineOffsets
+    , lineToOffset
+    , offsetToLine
+    )
+where
 
-  , locationSource
-  , locationColumn
-  , locationLine
-  , locationOffset
+import           Data.Hashable                  ( Hashable(..) )
+import           Data.Vector.Unboxed            ( Vector
+                                                , MVector
+                                                , Unbox
+                                                )
+import           Data.Text                      ( Text )
+import           GHC.Generics                   ( Generic )
+import           Control.DeepSeq                ( NFData )
+import           Data.Binary                    ( Binary(..) )
+import           Data.Aeson                     ( ToJSON(..)
+                                                , FromJSON(..)
+                                                )
+import           Control.Monad                  ( guard )
 
-  , makeSource
-  , getSourceLine
-  , getLocation
-  , enrichLocation
-  , stripLocation
-  , lineOffsets
-  , lineToOffset
-  , offsetToLine
-  ) where
-
-import Data.Hashable (Hashable(..))
-import Data.Vector.Unboxed (Vector, MVector, Unbox)
-import Data.Text (Text)
-import GHC.Generics (Generic)
-import Control.DeepSeq (NFData)
-import Data.Binary (Binary(..))
-import Data.Aeson (ToJSON(..), FromJSON(..))
-import Control.Monad (guard)
-
-import qualified Data.Text as T
-import qualified Data.Vector.Unboxed as V
-import qualified Data.Vector.Generic as VG
-import qualified Data.Vector.Generic.Mutable as VGM
+import qualified Data.Text                     as T
+import qualified Data.Vector.Unboxed           as V
+import qualified Data.Vector.Generic           as VG
+import qualified Data.Vector.Generic.Mutable   as VGM
 
 -- | Information about Prosidy source file.
 --
@@ -82,14 +86,11 @@ makeSource :: String -> Text -> Source
 makeSource name body = Source name body lineMap
   where
     lineMap = case T.foldl' lineMapFold (1, '\0', []) $ body of
-      (_, _, acc) -> LineMap . V.fromList . reverse $ acc
+        (_, _, acc) -> LineMap . V.fromList . reverse $ acc
     lineMapFold (ix, prev, acc) ch
-      | ch == '\n' && prev == '\r'
-      = (succ ix, ch, Offset ix : drop 1 acc)
-      | ch == '\n' || ch == '\r'
-      = (succ ix, ch, Offset ix : acc)
-      | otherwise
-      = (succ ix, ch, acc)
+        | ch == '\n' && prev == '\r' = (succ ix, ch, Offset ix : drop 1 acc)
+        | ch == '\n' || ch == '\r'   = (succ ix, ch, Offset ix : acc)
+        | otherwise                  = (succ ix, ch, acc)
 
 -- | Convert an 'Offset' into a 'Location'.
 getLocation :: Offset -> Source -> Maybe Location
@@ -100,14 +101,11 @@ getLocation offset src = do
 -- | Fetch a single line from a source.
 getSourceLine :: Line -> Source -> Maybe Text
 getSourceLine line source = do
-    start   <- fromEnum <$> lineToOffset line lineMap
-    let end  = fromEnum <$> lineToOffset (succ line) lineMap
-    Just
-      . maybe id (T.take . (flip (-) start)) end
-      . T.drop start
-      $ sourceText source
-  where
-    lineMap = sourceLineMap source
+    start <- fromEnum <$> lineToOffset line lineMap
+    let end = fromEnum <$> lineToOffset (succ line) lineMap
+    Just . maybe id (T.take . (flip (-) start)) end . T.drop start $ sourceText
+        source
+    where lineMap = sourceLineMap source
 
 -- | A location in a 'Source'. The line and column numbers of this type are not
 -- attached to this type; convert to a 'Location' to access those values.
@@ -137,28 +135,25 @@ data Location = Location
 -- | Add lazily computed line and column number information to a 
 -- 'SparseLocation'.
 enrichLocation :: SparseLocation -> Location
-enrichLocation sl = Location
-    { locationSource = source
-    , locationOffset = offset
-    , locationLine   = line
-    , locationColumn = column
-    }
+enrichLocation sl = Location { locationSource = source
+                             , locationOffset = offset
+                             , locationLine   = line
+                             , locationColumn = column
+                             }
   where
     source                     = sparseLocationSource sl
     lineMap                    = sourceLineMap source
     offset@(~(Offset offsetN)) = sparseLocationOffset sl
     line                       = offsetToLine offset lineMap
-    column                     = 
-      case lineToOffset line lineMap of
+    column                     = case lineToOffset line lineMap of
         Just (Offset n) -> Column (offsetN - n)
         Nothing         -> Column 0
 
 -- | Remove line and column number information from a 'Location'.
 stripLocation :: Location -> SparseLocation
-stripLocation l = SparseLocation
-    { sparseLocationSource = locationSource l
-    , sparseLocationOffset = locationOffset l
-    }
+stripLocation l = SparseLocation { sparseLocationSource = locationSource l
+                                 , sparseLocationOffset = locationOffset l
+                                 }
 
 -- | A dense vector containing offsets poiting to the start of each line. That
 -- is, the starting position of the third line of a file can be found at
@@ -172,8 +167,7 @@ instance Binary LineMap where
     put (LineMap v) = put (V.toList v)
 
 instance Hashable LineMap where
-    hashWithSalt salt (LineMap v) =
-        V.foldl' hashWithSalt salt v
+    hashWithSalt salt (LineMap v) = V.foldl' hashWithSalt salt v
 
 -- | Convert a 'LineMap' into a list of 'Offset's, corresponding to the first
 -- character of a line. Note that the initial offset is omitted-- the offset at
@@ -184,26 +178,27 @@ lineOffsets (LineMap v) = V.toList v
 -- | Fetch the 'Offset' for the given 'Line'. Evaluates to 'Nothing' if the
 -- given 'Line' does not appear in the LineMap
 lineToOffset :: Line -> LineMap -> Maybe Offset
-lineToOffset (Line 0) _ = Just $ Offset 0
+lineToOffset (Line 0  ) _            = Just $ Offset 0
 lineToOffset (Line nth) (LineMap xs) = xs V.!? fromIntegral (pred nth)
 
 -- | Fetch the 'Line' number for a given 'Offset'. Newlines will be attributed
 -- the line that they terminate, rather than the line started immediately 
 -- afterwards.
 offsetToLine :: Offset -> LineMap -> Line
-offsetToLine offset (LineMap xs) = Line . fromIntegral $ go Nothing 0 (V.length xs)
+offsetToLine offset (LineMap xs) = Line . fromIntegral $ go Nothing
+                                                            0
+                                                            (V.length xs)
   where
     go result min max
-      | min >= max = maybe 0 succ result
-      | otherwise    =
-      let
-        nthIndex  = ((max - min) `div` 2) + min
-        nthOffset = xs V.! nthIndex
-      in
-        case nthOffset `compare` offset of
-          EQ -> succ nthIndex
-          LT -> go (Just nthIndex) (nthIndex + 1) max
-          GT -> go result min nthIndex
+        | min >= max
+        = maybe 0 succ result
+        | otherwise
+        = let nthIndex  = ((max - min) `div` 2) + min
+              nthOffset = xs V.! nthIndex
+          in  case nthOffset `compare` offset of
+                  EQ -> succ nthIndex
+                  LT -> go (Just nthIndex) (nthIndex + 1) max
+                  GT -> go result min nthIndex
 
 -- | A line number.
 --
@@ -229,55 +224,45 @@ newtype Offset = Offset Word
 newtype instance MVector s Offset = MV_Offset (MVector s Word)
 
 instance VGM.MVector MVector Offset where
-  basicLength (MV_Offset m) = 
-      VGM.basicLength m
-  {-# INLINE basicLength #-}
+    basicLength (MV_Offset m) = VGM.basicLength m
+    {-# INLINE basicLength #-}
 
-  basicUnsafeSlice ix len (MV_Offset m) = 
-      MV_Offset $ VGM.basicUnsafeSlice ix len m
-  {-# INLINE basicUnsafeSlice #-}
+    basicUnsafeSlice ix len (MV_Offset m) =
+        MV_Offset $ VGM.basicUnsafeSlice ix len m
+    {-# INLINE basicUnsafeSlice #-}
 
-  basicOverlaps (MV_Offset x) (MV_Offset y) =
-      VGM.basicOverlaps x y
-  {-# INLINE basicOverlaps #-}
+    basicOverlaps (MV_Offset x) (MV_Offset y) = VGM.basicOverlaps x y
+    {-# INLINE basicOverlaps #-}
 
-  basicUnsafeNew len =
-      MV_Offset <$> VGM.basicUnsafeNew len
-  {-# INLINE basicUnsafeNew #-}
+    basicUnsafeNew len = MV_Offset <$> VGM.basicUnsafeNew len
+    {-# INLINE basicUnsafeNew #-}
 
-  basicInitialize (MV_Offset v) =
-      VGM.basicInitialize v
-  {-# INLINE basicInitialize #-}
+    basicInitialize (MV_Offset v) = VGM.basicInitialize v
+    {-# INLINE basicInitialize #-}
 
-  basicUnsafeRead (MV_Offset v) =
-      fmap Offset <$> VGM.basicUnsafeRead v
-  {-# INLINE basicUnsafeRead #-}
+    basicUnsafeRead (MV_Offset v) = fmap Offset <$> VGM.basicUnsafeRead v
+    {-# INLINE basicUnsafeRead #-}
 
-  basicUnsafeWrite (MV_Offset v) ix (Offset w) =
-      VGM.basicUnsafeWrite v ix w
-  {-# INLINE basicUnsafeWrite #-}
+    basicUnsafeWrite (MV_Offset v) ix (Offset w) = VGM.basicUnsafeWrite v ix w
+    {-# INLINE basicUnsafeWrite #-}
 
 newtype instance Vector Offset = V_Offset (Vector Word)
 
 instance VG.Vector Vector Offset where
-    basicUnsafeFreeze (MV_Offset v) =
-        V_Offset <$> VG.basicUnsafeFreeze v
+    basicUnsafeFreeze (MV_Offset v) = V_Offset <$> VG.basicUnsafeFreeze v
     {-# INLINE basicUnsafeFreeze #-}
 
-    basicUnsafeThaw (V_Offset v) =
-        MV_Offset <$> VG.basicUnsafeThaw v
+    basicUnsafeThaw (V_Offset v) = MV_Offset <$> VG.basicUnsafeThaw v
     {-# INLINE basicUnsafeThaw #-}
 
-    basicLength (V_Offset v) =
-        VG.basicLength v
+    basicLength (V_Offset v) = VG.basicLength v
     {-# INLINE basicLength #-}
 
     basicUnsafeSlice ix len (V_Offset v) =
         V_Offset $ VG.basicUnsafeSlice ix len v
     {-# INLINE basicUnsafeSlice #-}
 
-    basicUnsafeIndexM (V_Offset v) ix =
-        Offset <$> VG.basicUnsafeIndexM v ix
+    basicUnsafeIndexM (V_Offset v) ix = Offset <$> VG.basicUnsafeIndexM v ix
     {-# INLINE basicUnsafeIndexM #-}
 
 instance Unbox Offset where

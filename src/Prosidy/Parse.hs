@@ -24,16 +24,23 @@ module Prosidy.Parse
     )
 where
 
-import Prosidy.Compat
-import Prelude hiding (fail)
+import           Prosidy.Compat
+import           Prelude                 hiding ( fail )
 
 import           Prosidy.Types
 import           Prosidy.Source
-import Prosidy.Types.Key (isValidKeyHead, isValidKeyTail, unsafeMakeKey)
-import Prosidy.Types.Series (fromSeqNE, toSeqNE, fromSeq)
+import           Prosidy.Types.Key              ( isValidKeyHead
+                                                , isValidKeyTail
+                                                , unsafeMakeKey
+                                                )
+import           Prosidy.Types.Series           ( fromSeqNE
+                                                , toSeqNE
+                                                , fromSeq
+                                                )
 
-import           Text.Megaparsec         hiding ( token 
-                                                , sourceName )
+import           Text.Megaparsec         hiding ( token
+                                                , sourceName
+                                                )
 import           Text.Megaparsec.Char           ( char
                                                 , string
                                                 )
@@ -208,10 +215,7 @@ literalBody :: P () -> P Text
 literalBody end = do
     literalLines <- manyTill literalLine (try $ skipSpaces *> end)
     emptyLines
-    pure
-        $ Text.Lazy.toStrict
-        . Text.Lazy.intercalate "\n"
-        $ literalLines
+    pure $ Text.Lazy.toStrict . Text.Lazy.intercalate "\n" $ literalLines
 
 literalLine :: P Text.Lazy.Text
 literalLine = do
@@ -440,8 +444,7 @@ annotateSource :: P (Maybe Location -> a) -> P a
 annotateSource (P (ReaderT r)) = P . ReaderT $ \src -> do
     offset    <- Offset . fromIntegral <$> getOffset
     result    <- r src
-    sourceLoc <- maybe (fail sourceLocationError) pure
-        $ getLocation offset src
+    sourceLoc <- maybe (fail sourceLocationError) pure $ getLocation offset src
     pure . result $ Just sourceLoc
 
 sourceLocationError :: String

@@ -7,7 +7,13 @@ Maintainer  : alex@fldcr.com
 -}
 module Prosidy (module X) where
 
-import Prosidy.Source as X (Source, Location, Line, Column, Offset)
-import Prosidy.Optics as X
-import Prosidy.Parse  as X
-import Prosidy.Types  as X
+import           Prosidy.Source                as X
+                                                ( Source
+                                                , Location
+                                                , Line
+                                                , Column
+                                                , Offset
+                                                )
+import           Prosidy.Optics                as X
+import           Prosidy.Parse                 as X
+import           Prosidy.Types                 as X

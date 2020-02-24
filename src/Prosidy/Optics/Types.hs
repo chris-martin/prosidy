@@ -8,7 +8,7 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE LambdaCase   #-}
 {-# LANGUAGE RankNTypes   #-}
 {-# LANGUAGE TypeFamilies #-}
-module Prosidy.Optics.Types 
+module Prosidy.Optics.Types
     ( -- * Classy optics
       -- ** Items with 'Metadata' 
       HasMetadata(..)
@@ -29,27 +29,36 @@ module Prosidy.Optics.Types
     , _Text
     , _Break
       -- * Optics on common types 
-    , key 
+    , key
     , _Assoc
     , _NonEmpty
     , _Series
     , _SeriesNE
     , _Set
-    ) where
+    )
+where
 
-import Prosidy.Types
-import Prosidy.Types.Assoc (toHashMap, fromHashMap)
-import Prosidy.Types.Series (toSeq, fromSeq, toSeqNE, fromSeqNE)
-import Prosidy.Types.Set (toHashSet, fromHashSet)
-import Prosidy.Optics.Internal
+import           Prosidy.Types
+import           Prosidy.Types.Assoc            ( toHashMap
+                                                , fromHashMap
+                                                )
+import           Prosidy.Types.Series           ( toSeq
+                                                , fromSeq
+                                                , toSeqNE
+                                                , fromSeqNE
+                                                )
+import           Prosidy.Types.Set              ( toHashSet
+                                                , fromHashSet
+                                                )
+import           Prosidy.Optics.Internal
 
-import Data.Text (Text)
-import Data.Sequence (Seq)
-import Data.HashMap.Strict (HashMap)
-import Data.HashSet (HashSet)
+import           Data.Text                      ( Text )
+import           Data.Sequence                  ( Seq )
+import           Data.HashMap.Strict            ( HashMap )
+import           Data.HashSet                   ( HashSet )
 
-import qualified Data.HashMap.Strict as HM
-import qualified Data.HashSet as HS
+import qualified Data.HashMap.Strict           as HM
+import qualified Data.HashSet                  as HS
 
 -------------------------------------------------------------------------------
 -- | A classy optic for focusing on items with 'Metadata', including 'Tag's,
@@ -58,15 +67,15 @@ class HasMetadata t where
     metadata :: Lens' t Metadata
 
 instance HasMetadata Document where
-    metadata = lens documentMetadata (\d m -> d{documentMetadata = m})
+    metadata = lens documentMetadata (\d m -> d { documentMetadata = m })
     {-# INLINE metadata #-}
 
 instance HasMetadata (Tag a) where
-    metadata = lens tagMetadata (\d m -> d{tagMetadata = m})
+    metadata = lens tagMetadata (\d m -> d { tagMetadata = m })
     {-# INLINE metadata #-}
 
 instance HasMetadata (Region a) where
-    metadata = lens regionMetadata (\d m -> d{regionMetadata = m})
+    metadata = lens regionMetadata (\d m -> d { regionMetadata = m })
     {-# INLINE metadata #-}
 
 instance HasMetadata Metadata where
@@ -75,8 +84,9 @@ instance HasMetadata Metadata where
 
 -- | Fetch all properties from items which contain metadata.
 properties :: HasMetadata m => Lens' m (Set Key)
-properties = metadata . lens metadataProperties (\m p -> m{metadataProperties = p})
-{-# INLINEABLE properties #-}
+properties =
+    metadata . lens metadataProperties (\m p -> m { metadataProperties = p })
+{-# INLINABLE properties #-}
 {-# SPECIALIZE INLINE properties :: Lens' Metadata   (Set Key) #-}
 {-# SPECIALIZE INLINE properties :: Lens' Document   (Set Key) #-}
 {-# SPECIALIZE INLINE properties :: Lens' (Tag a)    (Set Key) #-}
@@ -84,7 +94,8 @@ properties = metadata . lens metadataProperties (\m p -> m{metadataProperties = 
 
 -- | Fetch all settings defined on items which contain metadata.
 settings :: HasMetadata m => Lens' m (Assoc Key Text)
-settings = metadata . lens metadataSettings (\m s -> m{metadataSettings = s})
+settings =
+    metadata . lens metadataSettings (\m s -> m { metadataSettings = s })
 {-# INLINABLE settings #-}
 {-# SPECIALIZE INLINE settings :: Lens' Metadata   (Assoc Key Text) #-}
 {-# SPECIALIZE INLINE settings :: Lens' Document   (Assoc Key Text) #-}
@@ -95,14 +106,16 @@ settings = metadata . lens metadataSettings (\m s -> m{metadataSettings = s})
 -- optic as a setter will add a property if set to 'True' and remove the
 -- property when set to 'False'.
 hasProperty :: HasMetadata m => Key -> Lens' m Bool
-hasProperty k = properties . _Set . lens (HS.member k) 
+hasProperty k = properties . _Set . lens
+    (HS.member k)
     (\hs b -> (if b then HS.insert else HS.delete) k hs)
 {-# INLINE hasProperty #-}
 
 -- | Select a setting from an item attached to metadata. Returns 'Nothing' if
 -- no value is set.
 atSetting :: HasMetadata m => Key -> Lens' m (Maybe Text)
-atSetting k = settings . _Assoc . lens (HM.lookup k)
+atSetting k = settings . _Assoc . lens
+    (HM.lookup k)
     (\hm x -> maybe (HM.delete k) (HM.insert k) x hm)
 {-# INLINE atSetting #-}
 
@@ -117,32 +130,30 @@ class HasContent t where
 
 instance HasContent Document where
     type Content Document = Series Block
-    content = lens documentContent (\d c -> d{documentContent = c})
+    content = lens documentContent (\d c -> d { documentContent = c })
     {-# INLINE content #-}
 
 instance HasContent (Tag a) where
     type Content (Tag a) = a
-    content = lens tagContent (\t c -> t{tagContent = c})
+    content = lens tagContent (\t c -> t { tagContent = c })
     {-# INLINE content #-}
 
 instance HasContent (Region a) where
     type Content (Region a) = a
-    content = lens regionContent (\t c -> t{regionContent = c})
+    content = lens regionContent (\t c -> t { regionContent = c })
     {-# INLINE content #-}
 
 instance HasContent Paragraph where
     type Content Paragraph = SeriesNE Inline
-    content = lens paragraphContent (\t c -> t{paragraphContent = c})
+    content = lens paragraphContent (\t c -> t { paragraphContent = c })
     {-# INLINE content #-}
 
 -------------------------------------------------------------------------------
 -- | Focus on the inner 'Region' of 'Tag's with a name. This can be used to
 -- filter 'Tag's to a specific subset for manipulation.
 tagged :: Key -> Prism' (Tag a) (Region a)
-tagged k = prism' (regionToTag k) $ \tag ->
-    if tagName tag == k
-    then Just $ tagToRegion tag
-    else Nothing
+tagged k = prism' (regionToTag k)
+    $ \tag -> if tagName tag == k then Just $ tagToRegion tag else Nothing
 {-# INLINE tagged #-}
 
 -------------------------------------------------------------------------------
@@ -155,7 +166,7 @@ _BlockTag = prism' BlockTag $ \case
 -- | Focus only on paragraphs'
 _BlockParagraph :: Prism' Block Paragraph
 _BlockParagraph = prism' BlockParagraph $ \case
-    BlockParagraph p -> Just p 
+    BlockParagraph p -> Just p
     _                -> Nothing
 
 -- | Focus only on literal tags.

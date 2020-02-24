@@ -23,7 +23,7 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE QuasiQuotes #-}
-module Prosidy.Types.Key 
+module Prosidy.Types.Key
     ( -- * The 'Key' type.
       Key
       -- * Creating 'Key's and unwrapping them
@@ -36,23 +36,30 @@ module Prosidy.Types.Key
       -- * Errors
     , KeyError(..)
     , InvalidCharacter(..)
-    ) where
+    )
+where
 
-import Data.Text (Text)
-import Data.Aeson (ToJSON(..), ToJSONKey(..), FromJSON(..), FromJSONKey(..))
-import GHC.Generics (Generic)
-import Control.DeepSeq (NFData)
-import Data.Binary (Binary)
-import Data.Hashable (Hashable)
-import Data.String (IsString(..))
-import Data.Foldable (for_)
-import Control.Monad (unless)
-import Control.Exception (Exception(..), throw)
+import           Data.Text                      ( Text )
+import           Data.Aeson                     ( ToJSON(..)
+                                                , ToJSONKey(..)
+                                                , FromJSON(..)
+                                                , FromJSONKey(..)
+                                                )
+import           GHC.Generics                   ( Generic )
+import           Control.DeepSeq                ( NFData )
+import           Data.Binary                    ( Binary )
+import           Data.Hashable                  ( Hashable )
+import           Data.String                    ( IsString(..) )
+import           Data.Foldable                  ( for_ )
+import           Control.Monad                  ( unless )
+import           Control.Exception              ( Exception(..)
+                                                , throw
+                                                )
 
-import qualified Data.Aeson as Aeson
-import qualified Data.Char as Char
-import qualified Data.Set as Set
-import qualified Data.Text as Text
+import qualified Data.Aeson                    as Aeson
+import qualified Data.Char                     as Char
+import qualified Data.Set                      as Set
+import qualified Data.Text                     as Text
 
 -- | A 'Key' is an identifier used in tags, properties, and setting names.
 newtype Key = Key Text
@@ -70,22 +77,27 @@ instance FromJSON Key where
         either (fail . displayException) pure $ makeKey text
 
 instance FromJSONKey Key where
-    fromJSONKey = Aeson.FromJSONKeyTextParser $
-        either (fail . displayException) pure . makeKey
+    fromJSONKey =
+        Aeson.FromJSONKeyTextParser
+            $ either (fail . displayException) pure
+            . makeKey
 
 -- | Create a new 'Key', checking its validity.
 makeKey :: Text -> Either KeyError Key
 makeKey rawText = case Text.unpack rawText of
-    [] -> 
-        Left EmptyKeyError
+    [] -> Left EmptyKeyError
     keyHead : keyTail
-      | isValidKeyHead keyHead -> do
-        for_ (zip [1..] keyTail) $ \(ix, ch) ->
-            unless (isValidKeyTail ch) $
-                Left . InvalidCharacterError $ InvalidCharacter rawText ix ch
-        Right $ Key rawText
-      | otherwise -> 
-        Left . InvalidCharacterError $ InvalidCharacter rawText 0 keyHead
+        | isValidKeyHead keyHead -> do
+            for_ (zip [1 ..] keyTail) $ \(ix, ch) ->
+                unless (isValidKeyTail ch)
+                    $ Left
+                    . InvalidCharacterError
+                    $ InvalidCharacter rawText ix ch
+            Right $ Key rawText
+        | otherwise -> Left . InvalidCharacterError $ InvalidCharacter
+            rawText
+            0
+            keyHead
 
 -- | Create a new 'Key' /without/ performing any checks.
 unsafeMakeKey :: Text -> Key
@@ -106,7 +118,7 @@ isValidKeyHead = (||) <$> Char.isAlphaNum <*> (== '_')
 isValidKeyTail :: Char -> Bool
 isValidKeyTail = not . invalid
   where
-    invalid = (||) <$> Char.isSpace <*> (`Set.member` reserved)
+    invalid  = (||) <$> Char.isSpace <*> (`Set.member` reserved)
     reserved = Set.fromList "\\#{}[]:=,"
 
 -- | Errors returned when creating invalid keys.
@@ -132,11 +144,12 @@ data InvalidCharacter = InvalidCharacter
 instance Exception KeyError where
     displayException EmptyKeyError =
         "Cannot create a Key with a length of zero."
-    displayException (InvalidCharacterError (InvalidCharacter text nth ch)) = unwords
-        [ "Cannot create a Key named " <> show text <> ":"
-        , "the character"
-        , show ch
-        , "at index"
-        , show nth
-        , "is not allowed."
-        ]
+    displayException (InvalidCharacterError (InvalidCharacter text nth ch)) =
+        unwords
+            [ "Cannot create a Key named " <> show text <> ":"
+            , "the character"
+            , show ch
+            , "at index"
+            , show nth
+            , "is not allowed."
+            ]

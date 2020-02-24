@@ -7,5 +7,5 @@ Maintainer  : alex@fldcr.com
 -}
 module Prosidy.Optics (module X) where
 
-import Prosidy.Optics.Source as X
-import Prosidy.Optics.Types as X
+import           Prosidy.Optics.Source         as X
+import           Prosidy.Optics.Types          as X
