@@ -18,6 +18,8 @@ module Prosidy.Optics.Types
     , atSetting
       -- ** Items wrapping content
     , HasContent(..)
+      -- * Accessors for fields not otherwise covered
+    , tag
       -- * Conversion between 'Tag's and 'Region's.
     , tagged
       -- * Prisms on 'Block' contexts
@@ -147,6 +149,12 @@ instance HasContent Paragraph where
     type Content Paragraph = SeriesNE Inline
     content = lens paragraphContent (\t c -> t { paragraphContent = c })
     {-# INLINE content #-}
+
+-------------------------------------------------------------------------------
+-- | Focus on the name of a 'Tag'.
+tag :: Lens' (Tag a) Key
+tag = lens tagName (\t n -> t { tagName = n })
+{-# INLINE tag #-}
 
 -------------------------------------------------------------------------------
 -- | Focus on the inner 'Region' of 'Tag's with a name. This can be used to

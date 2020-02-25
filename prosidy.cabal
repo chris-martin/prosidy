@@ -1,15 +1,16 @@
-cabal-version: 2.4
-name:          prosidy
-version:       1.5.0.0
-synopsis:      A simple language for writing documents.
-license:       MPL-2.0
-license-file:  LICENSE
-author:        James Alexander Feldman-Crough
-maintainer:    alex@fldcr.com
-copyright:     ©2020 to James Alexander Feldman-Crough
-category:      Language
-data-dir:      data
-data-files:    golden/**/*.pro, golden/**/*.json
+cabal-version:       2.4
+name:                prosidy
+version:             1.5.0.1
+synopsis:            A simple language for writing documents.
+license:             MPL-2.0
+license-file:        LICENSE
+author:              James Alexander Feldman-Crough
+maintainer:          alex@fldcr.com
+copyright:           ©2020 to James Alexander Feldman-Crough
+category:            Language
+data-dir:            data
+data-files:          golden/**/*.pro, golden/**/*.json
+extra-source-files:  CHANGELOG, README.pro
 
 tested-with:
     GHC == 8.4.4

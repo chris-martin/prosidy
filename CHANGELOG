@@ -1,0 +1,8 @@
+# v1.5.0.1 _(2020-02-24)_
+- Added `CHANGELOG` to its own file.
+- Included `CHANGELOG` and `README.pro` in the source distribution.
+- Added an optic for fetching the name of a `Tag`.
+
+# v1.5.0.0 _(2020-02-23)_
+- Added tests for GHC 8.4.4 through 8.6.1.
+- Initial stable release.
