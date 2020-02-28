@@ -1,6 +1,10 @@
 title: Prosidy README
 ---
 
+#link[uri='https://ci.fldcr.com/prosidy/prosidy']{
+#image[uri='https://ci.fldcr.com/api/badges/prosidy/prosidy/status.svg', desc='Build Status']
+}
+
 Prosidy is a small language for writing documents.
 
 Like #link[uri='https://daringfireball.net/projects/markdown/']{Markdown},
