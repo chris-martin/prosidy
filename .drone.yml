@@ -67,8 +67,6 @@ steps:
   when:
     event: 
     - tag
-    branch: 
-    - master
 
 volumes:
   - name: cabal-cache
@@ -76,6 +74,6 @@ volumes:
       path: /var/cache/cabal
 ---
 kind: signature
-hmac: 678ecf4b207c74b31fb59b3b903f2b1a28adaf50314e236b87f2cd1e819c4ce1
+hmac: bac8c74fe1e90b09b1882056f198fc4294c7cc72d3a875f0e0aa29b67b2e0e77
 
 ...
