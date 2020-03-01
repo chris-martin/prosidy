@@ -360,8 +360,8 @@ quotedText = do
     skipSpaces
     pure . Text.Lazy.toStrict . fold $ parts
 
-fragment :: P Text
-fragment = text
+fragment :: P Fragment
+fragment = annotateSource $ Fragment <$> text
 
 text :: P Text
 text = do

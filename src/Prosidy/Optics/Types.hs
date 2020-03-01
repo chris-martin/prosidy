@@ -20,6 +20,7 @@ module Prosidy.Optics.Types
     , HasContent(..)
       -- * Accessors for fields not otherwise covered
     , tag
+    , fragment
       -- * Conversion between 'Tag's and 'Region's.
     , tagged
       -- * Prisms on 'Block' contexts
@@ -157,6 +158,11 @@ tag = lens tagName (\t n -> t { tagName = n })
 {-# INLINE tag #-}
 
 -------------------------------------------------------------------------------
+-- | Get the contents of a 'Fragment'.
+fragment :: Lens' Fragment Text
+fragment = lens fragmentText (\f t -> f { fragmentText = t })
+
+-------------------------------------------------------------------------------
 -- | Focus on the inner 'Region' of 'Tag's with a name. This can be used to
 -- filter 'Tag's to a specific subset for manipulation.
 tagged :: Key -> Prism' (Tag a) (Region a)
@@ -190,7 +196,7 @@ _InlineTag = prism' InlineTag $ \case
     _           -> Nothing
 
 -- | Focus only on text nodes.
-_Text :: Prism' Inline Text
+_Text :: Prism' Inline Fragment
 _Text = prism' InlineText $ \case
     InlineText t -> Just t
     _            -> Nothing

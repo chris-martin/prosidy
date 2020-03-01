@@ -42,9 +42,37 @@ instance HasLocation (Region a) where
     location = affine' regionLocation (\d l -> d { regionLocation = Just l })
     {-# INLINE location #-}
 
+instance HasLocation Fragment where
+    location =
+        affine' fragmentLocation (\d l -> d { fragmentLocation = Just l })
+    {-# INLINE location #-}
+
 instance HasLocation Paragraph where
     location =
         affine' paragraphLocation (\d l -> d { paragraphLocation = Just l })
+    {-# INLINE location #-}
+
+instance HasLocation Block where
+    location = affine' get set
+      where
+        get (BlockLiteral   lit) = tagLocation lit
+        get (BlockParagraph p  ) = paragraphLocation p
+        get (BlockTag       tag) = tagLocation tag
+        set (BlockLiteral lit) l = BlockLiteral lit { tagLocation = Just l }
+        set (BlockParagraph p) l =
+            BlockParagraph p { paragraphLocation = Just l }
+        set (BlockTag tag) l = BlockTag tag { tagLocation = Just l }
+    {-# INLINE location #-}
+
+instance HasLocation Inline where
+    location = affine' get set
+      where
+        get Break            = Nothing
+        get (InlineTag  tag) = tagLocation tag
+        get (InlineText f  ) = fragmentLocation f
+        set Break            _ = Break
+        set (InlineTag  tag) l = InlineTag tag { tagLocation = Just l }
+        set (InlineText f  ) l = InlineText f { fragmentLocation = Just l }
     {-# INLINE location #-}
 
 -- | Focus on the 'Offset' from a value parsed from a source file. If the 

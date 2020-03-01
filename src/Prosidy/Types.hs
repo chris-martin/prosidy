@@ -38,6 +38,8 @@ module Prosidy.Types
       -- * Common structures
     , Metadata(..)
     , Region(..)
+      -- * Textual fragments
+    , Fragment(..)
       -- * Utility wrappers
     , module X
     )
@@ -68,6 +70,7 @@ import           Data.Hashable                  ( Hashable )
 import           Data.Aeson                     ( ToJSON(..)
                                                 , FromJSON(..)
                                                 , withObject
+                                                , withText
                                                 , (.:)
                                                 , (.=)
                                                 , object
@@ -155,6 +158,24 @@ regionToDocument :: Region (Series Block) -> Document
 regionToDocument (Region md ct _) = Document md ct
 
 -------------------------------------------------------------------------------
+-- | Plain text, possibly annotated with a 'Location'.
+data Fragment = Fragment
+  { fragmentText     :: Text
+    -- ^ Access the underlying 'Text'.
+  , fragmentLocation :: Maybe Location
+    -- ^ The location of the 'Text' in the source code.
+  }
+  deriving stock (Eq, Show, Generic)
+  deriving anyclass (Hashable, Binary, NFData)
+
+instance FromJSON Fragment where
+    parseJSON = withText "Fragment" $ pure . flip Fragment Nothing
+
+instance ToJSON Fragment where
+    toEncoding = toEncoding . fragmentText
+    toJSON     = toJSON . fragmentText
+
+-------------------------------------------------------------------------------
 -- | A sum type enumerating allowed types inside of an inline context.
 data Inline =
     Break
@@ -166,7 +187,7 @@ data Inline =
   | InlineTag  InlineTag
     -- ^ A 'Tag' which contains only 'Inline' items. These tags begin with the
     -- @#@ sigil in source.
-  | InlineText Text
+  | InlineText Fragment
     -- ^ A fragment of plain text.
   deriving stock (Eq, Show, Generic)
   deriving anyclass (Hashable, Binary, NFData)
