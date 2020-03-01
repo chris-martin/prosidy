@@ -1,3 +1,6 @@
+# v1.6 _(2020-03-01)_
+- Removed an erroneous `Monoid` constraint from `SeriesNE`
+
 # v1.5.0.1 _(2020-02-24)_
 - Added `CHANGELOG` to its own file.
 - Included `CHANGELOG` and `README.pro` in the source distribution.

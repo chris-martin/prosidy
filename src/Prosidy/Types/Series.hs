@@ -60,7 +60,7 @@ instance Traversable Series where
 -- | A non-empty 'Series'. 
 newtype SeriesNE a = SeriesNE (Seq a)
   deriving stock (Generic, Show)
-  deriving newtype (Eq, Foldable, Functor, Applicative, ToJSON, NFData, Semigroup, Monoid)
+  deriving newtype (Eq, Foldable, Functor, Applicative, ToJSON, NFData, Semigroup)
 
 instance Binary a => Binary (SeriesNE a) where
     get =
