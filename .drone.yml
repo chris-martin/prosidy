@@ -48,12 +48,34 @@ steps:
   commands:
   - ./scripts/documentation-coverage
 
+- name: release
+  image: utdemir/ghc-musl:v4-integer-simple-ghc881
+  depends_on:
+  - ghc 8.8.1
+  - ghc 8.6.5
+  - ghc 8.4.4
+  - docs
+  environment:
+    CABAL_DIR: /cabal
+    HACKAGE_USER: {"from_secret": "hackage-user"}
+    HACKAGE_PASSWORD: {"from_secret": "hackage-password"}
+  volumes:
+  - name: cabal-cache
+    path: /cabal
+  commands:
+  - ./scripts/release
+  when:
+    event: 
+    - tag
+    branch: 
+    - master
+
 volumes:
   - name: cabal-cache
     host:
       path: /var/cache/cabal
 ---
 kind: signature
-hmac: 1e74f88acdb8fc6c09cee53f2b1016b5820ed05ae783e751c31d7f5aac3e2279
+hmac: 678ecf4b207c74b31fb59b3b903f2b1a28adaf50314e236b87f2cd1e819c4ce1
 
 ...
