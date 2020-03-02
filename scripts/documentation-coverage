@@ -4,7 +4,7 @@ set -e
 
 tmpfile="$(mktemp)"
 trap "rm -f $tmpfile" EXIT
-cabal v2-haddock --enable-documentation 2>&1 | tee "$tmpfile"
+cabal v2-haddock --haddock-for-hackage --enable-documentation 2>&1 | tee "$tmpfile"
 if grep --quiet --fixed-strings 'Missing documentation for:' "$tmpfile"
 then
     printf -- '-----\nERROR: Not all public exports have documentation.' >&2

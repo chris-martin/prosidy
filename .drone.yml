@@ -49,7 +49,7 @@ steps:
   - ./scripts/documentation-coverage
 
 - name: release
-  image: utdemir/ghc-musl:v4-integer-simple-ghc881
+  image: registry.in.fldcr.com/cabal-publish:latest
   depends_on:
   - ghc 8.8.1
   - ghc 8.6.5
@@ -65,7 +65,7 @@ steps:
   commands:
   - ./scripts/release
   when:
-    event: 
+    event:
     - tag
 
 volumes:
@@ -74,6 +74,6 @@ volumes:
       path: /var/cache/cabal
 ---
 kind: signature
-hmac: bac8c74fe1e90b09b1882056f198fc4294c7cc72d3a875f0e0aa29b67b2e0e77
+hmac: 4182c9a06e0671846733a1cd1617ad52119e1a96be312770004503c6be80b553
 
 ...
