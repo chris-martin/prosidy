@@ -1,3 +1,8 @@
+# v1.6.0.1 _(2020-03-13)_
+- Added patterns to `Series` and `SeriesNE` to make for easier pattern
+  matching.
+- Added the `BlockRegion`, `InlineRegion`, and `LiteralRegion` synonyms.
+
 # v1.6 _(2020-03-01)_
 - Removed an erroneous `Monoid` constraint from `SeriesNE`
 - Added locations to a few node types.

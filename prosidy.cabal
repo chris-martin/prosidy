@@ -1,6 +1,6 @@
 cabal-version:       2.4
 name:                prosidy
-version:             1.6.0.0
+version:             1.6.0.1
 synopsis:            A simple language for writing documents.
 license:             MPL-2.0
 license-file:        LICENSE
@@ -10,7 +10,7 @@ copyright:           ©2020 to James Alexander Feldman-Crough
 category:            Language
 data-dir:            data
 data-files:          golden/**/*.pro, golden/**/*.json
-extra-source-files:  CHANGELOG, README.pro
+extra-source-files:  CHANGELOG.md, README.pro
 
 tested-with:
     GHC == 8.4.4

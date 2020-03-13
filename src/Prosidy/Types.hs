@@ -30,6 +30,11 @@ module Prosidy.Types
     , LiteralTag
     , tagToRegion
     , regionToTag
+      -- * Regions
+    , Region(..)
+    , BlockRegion
+    , InlineRegion
+    , LiteralRegion
       -- * Contextual enumerations
     , Block(..)
     , Inline(..)
@@ -37,7 +42,6 @@ module Prosidy.Types
     , Paragraph(..)
       -- * Common structures
     , Metadata(..)
-    , Region(..)
       -- * Textual fragments
     , Fragment(..)
       -- * Utility wrappers
@@ -315,13 +319,25 @@ instance ToJSON a => ToJSON (Tag a) where
 -- Specified in Prosidy source with the @#-@ sigil.
 type BlockTag = Tag (Series Block)
 
+-- | A 'Region' containing a zero or more 'Block' items. Like 'BlockTag',
+-- without a tag name.
+type BlockRegion = Region (Series Block)
+
 -- | A 'Tag' containing zero or more 'Inline' items.
 -- Specified in Prosidy source with the @#@ sigil.
 type InlineTag = Tag (Series Inline)
 
+-- | A 'Region' containing a zero or more 'Inline' items. Like 'InlineTag',
+-- without a tag name.
+type InlineRegion = Region (Series Inline)
+
 -- | A 'Tag' containing a single plain-text item.
 -- Specified in Prosidy source with the @#=@ sigil.
 type LiteralTag = Tag Text
+
+-- | A 'Region' containing a single plain-text item. Like 'LiteralTag', without
+-- a tag name.
+type LiteralRegion = Region Text
 
 -- | Convert a 'Tag' to a 'Region' by discarding the tag's name.
 tagToRegion :: Tag a -> Region a
