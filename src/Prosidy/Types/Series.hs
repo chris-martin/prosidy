@@ -7,6 +7,8 @@ Maintainer  : alex@fldcr.com
 -}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Prosidy.Types.Series
     ( -- * Possibly empty collections
@@ -18,6 +20,13 @@ module Prosidy.Types.Series
     , SeriesNE
     , fromSeqNE
     , toSeqNE
+      -- * Pattern synonyms for easy manipulation of series
+    , pattern NonEmpty
+    , pattern Empty
+    , pattern (:>>:)
+    , pattern (:<<:)
+    , pattern (:>:)
+    , pattern (:<:)
     )
 where
 
@@ -57,7 +66,7 @@ instance Hashable a => Hashable (Series a) where
 instance Traversable Series where
     traverse f (Series xs) = Series <$> traverse f xs
 
--- | A non-empty 'Series'. 
+-- | A non-empty 'Series'.
 newtype SeriesNE a = SeriesNE (Seq a)
   deriving stock (Generic, Show)
   deriving newtype (Eq, Foldable, Functor, Applicative, ToJSON, NFData, Semigroup)
@@ -84,6 +93,50 @@ instance Hashable a => Hashable (SeriesNE a) where
 
 instance Traversable SeriesNE where
     traverse f (SeriesNE xs) = SeriesNE <$> traverse f xs
+
+pattern FromSeries :: Series a -> Seq a
+pattern FromSeries a <- (fromSeq -> a)
+
+-- | Matches against an empty 'Series'.
+pattern Empty :: Series a
+pattern Empty = Series Seq.Empty
+
+-- | Matches a non-empty 'SeriesNE' as if it were just a 'Series'.
+pattern NonEmpty :: SeriesNE a -> Series a
+pattern NonEmpty a <- (seriesNE -> Just a)
+  where NonEmpty (SeriesNE a) = Series a
+
+-- | Match against the first element of a 'Series'.
+infixr 5 :<:
+pattern (:<:) :: a -> Series a -> Series a
+pattern a :<: b <- Series (a Seq.:<| FromSeries b)
+  where a :<: Series b = Series (a Seq.:<| b)
+
+-- | Match against the last element of a 'Series'.
+infixl 5 :>:
+pattern (:>:) :: Series a -> a -> Series a
+pattern a :>: b <- Series (FromSeries a Seq.:|> b)
+  where Series a :>: b = Series (a Seq.:|> b)
+
+-- | Match against a non-empty 'SeriesNE' and a leading element.
+infixr 3 :<<:
+pattern (:<<:) :: a -> Series a -> SeriesNE a
+pattern a :<<: b <- SeriesNE (a Seq.:<| FromSeries b)
+  where a :<<: Series b = SeriesNE (a Seq.:<| b)
+
+-- | Match against a non-empty 'SeriesNE' and a trailing element.
+infixl 3 :>>:
+pattern (:>>:) :: Series a -> a -> SeriesNE a
+pattern a :>>: b <- SeriesNE (FromSeries a Seq.:|> b)
+  where Series a :>>: b = SeriesNE (a Seq.:|> b)
+
+seriesNE :: Series a -> Maybe (SeriesNE a)
+seriesNE = fromSeqNE . toSeq
+
+{-# COMPLETE (:<<:) #-}
+{-# COMPLETE (:>>:) #-}
+{-# COMPLETE (:>:), Empty #-}
+{-# COMPLETE (:<:), Empty #-}
 
 -- | Given a function which operates on a 'Seq', return a function which
 -- operates on a 'Series'.
