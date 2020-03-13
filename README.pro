@@ -4,6 +4,9 @@ title: Prosidy README
 #link[uri='https://ci.fldcr.com/prosidy/prosidy']{
 #image[uri='https://ci.fldcr.com/api/badges/prosidy/prosidy/status.svg', desc='Build Status']
 }
+#link[uri='https://hackage.haskell.org/packages/prosidy']{
+#image[uri='https://img.shields.io/hackage/v/prosidy', desc='Hackage']
+}
 
 Prosidy is a small language for writing documents.
 
@@ -31,7 +34,42 @@ be careful before using it for anything critical!
 That said, feedback is more than welcome!
 Reach me at #link[uri='mailto:alex@fldcr.com']{alex@fldcr.com}.
 
-#-h{Developing Prosidy}
-This project sets up an environment using direnv and Nix.
-We'd recommend you have both installed before building,
-although it may work without both.
+
+#-h{Related projects}
+
+#-h+{VSCode plugin}
+#-list:
+  #-item:
+    homepage:
+    #link[uri='https://marketplace.visualstudio.com/items?itemName=prosidy.prosidy']{
+        marketplace.visualstudio.com/items?itemName=prosidy.prosidy
+    }
+  #:
+  #-item:
+    source: 
+    #link[uri='https://git.fldcr.com/prosidy/vscode']{
+        git.fldcr.com/prosidy/vscode
+    }
+  #:
+#:
+Official VSCode support for the Prosidy language.
+
+
+#-h+{#lit{prosidyc}}
+#-list:
+  #-item:
+    homepage:
+    #link[uri='https://hackage.haskell.org/packages/prosidyc']{
+        hackage.haskell.org/packages/prosidyc
+    }
+  #:
+  #-item:
+    source: 
+    #link[uri='https://git.fldcr.com/prosidy/prosidyc']{
+        git.fldcr.com/prosidy/prosidyc
+    }
+  #:
+#:
+The #lit{prosidyc} Haskell library provides a small DSL for compiling
+Prosidy documents into other formats, ensuring that source locations are
+attached to error messages.
