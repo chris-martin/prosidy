@@ -45,6 +45,8 @@ import           Control.Monad                  ( guard )
 
 import qualified Data.Sequence                 as Seq
 
+{-# ANN module "nofmt" #-}
+
 -- | A newtype wrapper around a sequential collection.
 --
 -- Currently, 'Series' is implemented as a 'Seq', but this is not guarenteed to

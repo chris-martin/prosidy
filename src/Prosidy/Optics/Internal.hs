@@ -26,7 +26,8 @@ import           Data.Monoid                    ( First(..)
                                                 )
 import           Data.Functor.Identity          ( Identity(..) )
 import           Data.Tagged                    ( Tagged(..) )
-import           Data.Functor.Contravariant     ( Contravariant(..) )
+import           Data.Functor.Contravariant.Compat
+                                                ( Contravariant(..) )
 
 type Optic p f s t a b = p a (f b) -> p s (f t)
 type Iso s t a b = forall p f . (Profunctor p, Functor f) => Optic p f s t a b

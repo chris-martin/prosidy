@@ -10,7 +10,7 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE ApplicativeDo     #-}
 {-# LANGUAGE TypeApplications  #-}
 {-# LANGUAGE OverloadedStrings #-}
-
+{-# LANGUAGE NoImplicitPrelude #-}
 module Prosidy.Parse
     ( -- * Parsing Prosidy types from 'Data.Text.Text'
       parseDocument
@@ -24,7 +24,7 @@ module Prosidy.Parse
     )
 where
 
-import           Prosidy.Compat
+import           Control.Monad.Fail.Compat      ( MonadFail(..) )
 import           Prelude                 hiding ( fail )
 
 import           Prosidy.Types

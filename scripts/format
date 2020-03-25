@@ -1,0 +1,57 @@
+#!/bin/bash
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+log ()
+{
+    local color='0'
+    case "$1" in
+        --red    | -r) color=31; shift;;
+        --green  | -g) color=32; shift;;
+        --yellow | -y) color=33; shift;;
+        --cyan   | -c) color=36; shift;;
+        --)        shift;;
+    esac
+
+    printf -- '\e[%dm----> %b\e[m\n' "$color" "$*" >&2
+}
+
+fail ()
+{
+    if [[ "$1" != -* ]]
+    then
+        log --red "$@"
+    else
+        log "$@"
+    fi
+    exit 1
+}
+
+log -c 'Checking for \e[1muntracked\e[22m files and \e[1munstaged\e[22m modifications…'
+num_untracked="$(git ls-files --exclude-standard --modified --others | tee /dev/tty | wc -l)"
+if (( num_untracked == 0 ))
+then
+    log -g 'No unstanged changes!'
+else
+    log -y "Found \e[1m$num_untracked changes\e[22m not staged to the index."
+    fail 'Please stage or commit all changes before running this script.'
+fi
+
+log -c 'Formatting Haskell source files…'
+grep \
+    --extended-regexp \
+    --files-without-match \
+    --include '*.hs' \
+    --recursive \
+    '\{-#\s+ANN\s+module\s+"nofmt"\s+#-}' \
+    src/ test/ \
+| xargs -t brittany --config-file brittany.yaml --write-mode inplace
+num_changed="$(git ls-files --exclude-standard --modified | tee /dev/tty | wc -l)"
+
+if (( num_changed == 0 ))
+then
+    log -g 'No formatting changes were made!'
+else
+    log -y "Reformatted $num_changed Haskell source files."
+    exit 2
+fi
