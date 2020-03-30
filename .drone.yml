@@ -49,7 +49,6 @@ steps:
   depends_on:
   - ghc 8.8.1
   - ghc 8.6.5
-  - ghc 8.4.4
   - docs
   environment:
     CABAL_DIR: /cabal
@@ -70,6 +69,6 @@ volumes:
       path: /var/cache/cabal
 ---
 kind: signature
-hmac: 43d513b190eab1ed25a0877d256149f29fff80a26dafa0c3cd938c2dde711f2c
+hmac: a43076c542adf43fadea52a51bd48f09a9b4353289640815b572103467f0c675
 
 ...
