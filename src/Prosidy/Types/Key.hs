@@ -5,24 +5,10 @@ Copyright   : ©2020 James Alexander Feldman-Crough
 License     : MPL-2.0
 Maintainer  : alex@fldcr.com
 -}
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE DeriveFoldable #-}
-{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE DeriveTraversable #-}
-{-# LANGUAGE GADTSyntax #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE StrictData #-}
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE ViewPatterns #-}
-{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE Safe #-}
 module Prosidy.Types.Key
     ( -- * The 'Key' type.
       Key
@@ -39,16 +25,9 @@ module Prosidy.Types.Key
     )
 where
 
+import           Prosidy.Internal.Classes
+
 import           Data.Text                      ( Text )
-import           Data.Aeson                     ( ToJSON(..)
-                                                , ToJSONKey(..)
-                                                , FromJSON(..)
-                                                , FromJSONKey(..)
-                                                )
-import           GHC.Generics                   ( Generic )
-import           Control.DeepSeq                ( NFData )
-import           Data.Binary                    ( Binary )
-import           Data.Hashable                  ( Hashable )
 import           Data.String                    ( IsString(..) )
 import           Data.Foldable                  ( for_ )
 import           Control.Monad                  ( unless )
@@ -56,15 +35,14 @@ import           Control.Exception              ( Exception(..)
                                                 , throw
                                                 )
 
-import qualified Data.Aeson                    as Aeson
 import qualified Data.Char                     as Char
 import qualified Data.Set                      as Set
 import qualified Data.Text                     as Text
 
 -- | A 'Key' is an identifier used in tags, properties, and setting names.
 newtype Key = Key Text
-  deriving stock (Generic)
-  deriving newtype (Binary, Eq, Hashable, NFData, Ord, Show, ToJSON, ToJSONKey)
+  deriving stock (Show, Generic)
+  deriving (Binary, Eq, Hashable, NFData, Ord, ToJSON, ToJSONKey) via Text
 
 -- | 'Key' exposes an 'IsString' instance, but beware! Invalid strings will
 -- throw a pure exception. 
@@ -76,11 +54,8 @@ instance FromJSON Key where
         text <- parseJSON json
         either (fail . displayException) pure $ makeKey text
 
-instance FromJSONKey Key where
-    fromJSONKey =
-        Aeson.FromJSONKeyTextParser
-            $ either (fail . displayException) pure
-            . makeKey
+instance Pretty Key where
+    pretty = pretty . rawKey
 
 -- | Create a new 'Key', checking its validity.
 makeKey :: Text -> Either KeyError Key

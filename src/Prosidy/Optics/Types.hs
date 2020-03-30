@@ -8,6 +8,7 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE LambdaCase   #-}
 {-# LANGUAGE RankNTypes   #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE Safe #-}
 module Prosidy.Optics.Types
     ( -- * Classy optics
       -- ** Items with 'Metadata' 

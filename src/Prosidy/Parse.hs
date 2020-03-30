@@ -5,6 +5,7 @@ Copyright   : (c) James Alexander Feldman-Crough, 2019
 License     : MPL-2.0
 Maintainer  : alex@fldcr.com
 -}
+{-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE ApplicativeDo     #-}

@@ -5,45 +5,33 @@ Copyright   : ©2020 James Alexander Feldman-Crough
 License     : MPL-2.0
 Maintainer  : alex@fldcr.com
 -}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE Safe #-}
 module Prosidy.Types.Set (Set(..), asHashSet, fromHashSet, toHashSet) where
 
+import           Prosidy.Internal.Classes
+
 import           Data.HashSet                   ( HashSet )
-import           GHC.Generics                   ( Generic )
-import           Data.Aeson                     ( FromJSONKey
-                                                , ToJSONKey
-                                                , ToJSON(..)
-                                                , FromJSON(..)
-                                                )
-import           Control.DeepSeq                ( NFData )
-import           Data.Binary                    ( Binary(..) )
-import           Data.Hashable                  ( Hashable(..) )
 import qualified Data.HashSet                  as HS
-import qualified Data.HashMap.Strict           as HM
 
 -- | A newtype wrapper around an unordered collection of unique elements.
 --
 -- Currently, this is implemented as a wrapper around a 'HashSet'.
 newtype Set a = Set (HashSet a)
   deriving stock (Generic)
-  deriving newtype (Eq, Foldable, Show, NFData, Semigroup, Monoid, Hashable)
-
-instance (Hashable a, Eq a, ToJSONKey a) => ToJSON (Set a) where
-    toJSON (Set hs) = toJSON $ foldMap (flip HM.singleton True) hs
-    toEncoding (Set hs) = toEncoding $ foldMap (flip HM.singleton True) hs
-
-instance (Hashable a, Eq a, FromJSONKey a) => FromJSON (Set a) where
-    parseJSON json = do
-        m <- parseJSON json
-        pure . Set . HM.keysSet $ HM.filter id m
+  deriving (Eq, Show, NFData, Semigroup, Monoid, Hashable) via HashSet a
+  deriving Foldable via HashSet
 
 instance (Eq a, Hashable a, Binary a) => Binary (Set a) where
     get = Set . HS.fromList <$> get
 
     put (Set s) = put $ HS.toList s
+
+instance Pretty a => Pretty (Set a) where
+    pretty = pretty . HS.toList . toHashSet
 
 -- | Given a function which operates on 'HashSet's, return a function which
 -- performs the same operation on a 'Set'.

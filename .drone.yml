@@ -32,10 +32,6 @@ steps:
   name: ghc 8.6.5
   image: utdemir/ghc-musl:v4-integer-simple-ghc865
 
-- <<: *default-steps
-  name: ghc 8.4.4
-  image: utdemir/ghc-musl:v4-libgmp-ghc844
-
 - name: docs
   image: utdemir/ghc-musl:v4-integer-simple-ghc881
   depends_on: 
@@ -74,6 +70,6 @@ volumes:
       path: /var/cache/cabal
 ---
 kind: signature
-hmac: 4182c9a06e0671846733a1cd1617ad52119e1a96be312770004503c6be80b553
+hmac: 43d513b190eab1ed25a0877d256149f29fff80a26dafa0c3cd938c2dde711f2c
 
 ...

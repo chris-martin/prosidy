@@ -5,11 +5,11 @@ Copyright   : ©2020 James Alexander Feldman-Crough
 License     : MPL-2.0
 Maintainer  : alex@fldcr.com
 -}
-{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE ViewPatterns #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE Safe #-}
 module Prosidy.Types.Series
     ( -- * Possibly empty collections
       Series(..)
@@ -30,14 +30,9 @@ module Prosidy.Types.Series
     )
 where
 
+import Prosidy.Internal.Classes
+
 import           Data.Sequence                  ( Seq )
-import           GHC.Generics                   ( Generic )
-import           Data.Aeson                     ( ToJSON(..)
-                                                , FromJSON(..)
-                                                )
-import           Control.DeepSeq                ( NFData )
-import           Data.Binary                    ( Binary(..) )
-import           Data.Hashable                  ( Hashable(..) )
 import           Data.Foldable                  ( toList
                                                 , foldl'
                                                 )
@@ -45,15 +40,14 @@ import           Control.Monad                  ( guard )
 
 import qualified Data.Sequence                 as Seq
 
-{-# ANN module "nofmt" #-}
-
 -- | A newtype wrapper around a sequential collection.
 --
 -- Currently, 'Series' is implemented as a 'Seq', but this is not guarenteed to
 -- be true.
 newtype Series a = Series (Seq a)
-  deriving stock (Generic, Show)
-  deriving newtype (Eq, Foldable, Functor, Applicative, ToJSON, FromJSON, NFData, Semigroup, Monoid)
+  deriving (Generic, Show)
+  deriving (Eq, ToJSON, FromJSON, NFData, Semigroup, Monoid) via Seq a
+  deriving (Foldable, Functor, Applicative) via Seq
 
 instance Binary a => Binary (Series a) where
     get = Series . Seq.fromList <$> get
@@ -65,13 +59,17 @@ instance Binary a => Binary (Series a) where
 instance Hashable a => Hashable (Series a) where
     hashWithSalt salt (Series xs) = foldl' hashWithSalt salt xs
 
+instance Pretty a => Pretty (Series a) where
+    pretty = pretty . toList
+
 instance Traversable Series where
     traverse f (Series xs) = Series <$> traverse f xs
 
 -- | A non-empty 'Series'.
 newtype SeriesNE a = SeriesNE (Seq a)
-  deriving stock (Generic, Show)
-  deriving newtype (Eq, Foldable, Functor, Applicative, ToJSON, NFData, Semigroup)
+  deriving (Generic, Show)
+  deriving (Eq, ToJSON, NFData, Semigroup) via Seq a
+  deriving (Foldable, Functor, Applicative) via Seq
 
 instance Binary a => Binary (SeriesNE a) where
     get =
@@ -92,6 +90,9 @@ instance FromJSON a => FromJSON (SeriesNE a) where
 
 instance Hashable a => Hashable (SeriesNE a) where
     hashWithSalt salt (SeriesNE xs) = foldl' hashWithSalt salt xs
+
+instance Pretty a => Pretty (SeriesNE a) where
+    pretty = pretty . toList
 
 instance Traversable SeriesNE where
     traverse f (SeriesNE xs) = SeriesNE <$> traverse f xs

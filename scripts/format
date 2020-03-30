@@ -43,7 +43,7 @@ grep \
     --files-without-match \
     --include '*.hs' \
     --recursive \
-    '\{-#\s+ANN\s+module\s+"nofmt"\s+#-}' \
+    --regexp='{-# +LANGUAGE +ViewPatterns +#-}' \
     src/ test/ \
 | xargs -t brittany --config-file brittany.yaml --write-mode inplace
 num_changed="$(git ls-files --exclude-standard --modified | tee /dev/tty | wc -l)"

@@ -5,15 +5,12 @@ Copyright   : ©2020 James Alexander Feldman-Crough
 License     : MPL-2.0
 Maintainer  : alex@fldcr.com
 -}
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiWayIf #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData #-}
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE Safe #-}
 module Prosidy.Source
     ( Source(..)
     , Location
@@ -37,24 +34,15 @@ module Prosidy.Source
     )
 where
 
-import           Data.Hashable                  ( Hashable(..) )
-import           Data.Vector.Unboxed            ( Vector
-                                                , MVector
-                                                , Unbox
-                                                )
 import           Data.Text                      ( Text )
-import           GHC.Generics                   ( Generic )
-import           Control.DeepSeq                ( NFData )
-import           Data.Binary                    ( Binary(..) )
-import           Data.Aeson                     ( ToJSON(..)
-                                                , FromJSON(..)
-                                                )
 import           Control.Monad                  ( guard )
 
 import qualified Data.Text                     as T
-import qualified Data.Vector.Unboxed           as V
-import qualified Data.Vector.Generic           as VG
-import qualified Data.Vector.Generic.Mutable   as VGM
+import qualified Data.Text.Prettyprint.Doc     as PP
+
+import           Prosidy.Internal.Classes
+import           Prosidy.Source.LineMap
+import           Prosidy.Source.Units
 
 -- | Information about Prosidy source file.
 --
@@ -79,6 +67,9 @@ data Source = Source
 instance Show Source where
     show (Source fp _ _) = "Source " <> show fp
 
+instance Pretty Source where
+    pretty = pretty . sourceName
+
 -- | Create a 'Source' from a descriptive name and a body. The source name is
 -- typically a 'FilePath', but this is not guarenteed. For instance, when read 
 -- from standard-input, Prosidy chooses to name the source @\<stdin\>@.
@@ -86,7 +77,7 @@ makeSource :: String -> Text -> Source
 makeSource name body = Source name body lineMap
   where
     lineMap = case T.foldl' lineMapFold (1, '\0', []) $ body of
-        (_, _, acc) -> LineMap . V.fromList . reverse $ acc
+        (_, _, acc) -> fromOffsets acc
     lineMapFold (ix, prev, acc) ch
         | ch == '\n' && prev == '\r' = (succ ix, ch, Offset ix : drop 1 acc)
         | ch == '\n' || ch == '\r'   = (succ ix, ch, Offset ix : acc)
@@ -132,6 +123,10 @@ data Location = Location
   deriving stock (Show, Generic, Eq)
   deriving anyclass (NFData, Binary, Hashable)
 
+instance Pretty Location where
+    pretty loc = pretty (locationSource loc) PP.<+> "@" PP.<+> mconcat
+        [pretty (locationLine loc), "×", pretty (locationColumn loc)]
+
 -- | Add lazily computed line and column number information to a 
 -- 'SparseLocation'.
 enrichLocation :: SparseLocation -> Location
@@ -154,115 +149,3 @@ stripLocation :: Location -> SparseLocation
 stripLocation l = SparseLocation { sparseLocationSource = locationSource l
                                  , sparseLocationOffset = locationOffset l
                                  }
-
--- | A dense vector containing offsets poiting to the start of each line. That
--- is, the starting position of the third line of a file can be found at
--- position 2.
-newtype LineMap = LineMap (Vector Offset)
-  deriving stock (Eq, Generic)
-  deriving newtype (Show, NFData)
-
-instance Binary LineMap where
-    get = fmap (LineMap . V.fromList) get
-    put (LineMap v) = put (V.toList v)
-
-instance Hashable LineMap where
-    hashWithSalt salt (LineMap v) = V.foldl' hashWithSalt salt v
-
--- | Convert a 'LineMap' into a list of 'Offset's, corresponding to the first
--- character of a line. Note that the initial offset is omitted-- the offset at
--- index 0 will be the offset of the /second/ line.
-lineOffsets :: LineMap -> [Offset]
-lineOffsets (LineMap v) = V.toList v
-
--- | Fetch the 'Offset' for the given 'Line'. Evaluates to 'Nothing' if the
--- given 'Line' does not appear in the LineMap
-lineToOffset :: Line -> LineMap -> Maybe Offset
-lineToOffset (Line 0  ) _            = Just $ Offset 0
-lineToOffset (Line nth) (LineMap xs) = xs V.!? fromIntegral (pred nth)
-
--- | Fetch the 'Line' number for a given 'Offset'. Newlines will be attributed
--- the line that they terminate, rather than the line started immediately 
--- afterwards.
-offsetToLine :: Offset -> LineMap -> Line
-offsetToLine offset (LineMap xs) = Line . fromIntegral $ go Nothing
-                                                            0
-                                                            (V.length xs)
-  where
-    go result min max
-        | min >= max
-        = maybe 0 succ result
-        | otherwise
-        = let nthIndex  = ((max - min) `div` 2) + min
-              nthOffset = xs V.! nthIndex
-          in  case nthOffset `compare` offset of
-                  EQ -> succ nthIndex
-                  LT -> go (Just nthIndex) (nthIndex + 1) max
-                  GT -> go result min nthIndex
-
--- | A line number.
---
--- The 'Show' instance for 'Line' counts from one, while the internal
--- implementation counts from zero.
-newtype Line = Line Word
-  deriving stock (Eq, Ord, Generic, Show)
-  deriving newtype (ToJSON, FromJSON, Enum)
-  deriving anyclass (Hashable, NFData, Binary)
-
--- | A column number.
-newtype Column = Column Word
-  deriving stock (Eq, Ord, Generic, Show)
-  deriving newtype (ToJSON, FromJSON, Enum)
-  deriving anyclass (Hashable, NFData, Binary)
-
--- | An offset into a 'Source', counted by UTF-8 codepoint.
-newtype Offset = Offset Word
-  deriving stock (Eq, Show, Ord, Generic)
-  deriving newtype (ToJSON, FromJSON, Enum)
-  deriving anyclass (Hashable, NFData, Binary)
-
-newtype instance MVector s Offset = MV_Offset (MVector s Word)
-
-instance VGM.MVector MVector Offset where
-    basicLength (MV_Offset m) = VGM.basicLength m
-    {-# INLINE basicLength #-}
-
-    basicUnsafeSlice ix len (MV_Offset m) =
-        MV_Offset $ VGM.basicUnsafeSlice ix len m
-    {-# INLINE basicUnsafeSlice #-}
-
-    basicOverlaps (MV_Offset x) (MV_Offset y) = VGM.basicOverlaps x y
-    {-# INLINE basicOverlaps #-}
-
-    basicUnsafeNew len = MV_Offset <$> VGM.basicUnsafeNew len
-    {-# INLINE basicUnsafeNew #-}
-
-    basicInitialize (MV_Offset v) = VGM.basicInitialize v
-    {-# INLINE basicInitialize #-}
-
-    basicUnsafeRead (MV_Offset v) = fmap Offset <$> VGM.basicUnsafeRead v
-    {-# INLINE basicUnsafeRead #-}
-
-    basicUnsafeWrite (MV_Offset v) ix (Offset w) = VGM.basicUnsafeWrite v ix w
-    {-# INLINE basicUnsafeWrite #-}
-
-newtype instance Vector Offset = V_Offset (Vector Word)
-
-instance VG.Vector Vector Offset where
-    basicUnsafeFreeze (MV_Offset v) = V_Offset <$> VG.basicUnsafeFreeze v
-    {-# INLINE basicUnsafeFreeze #-}
-
-    basicUnsafeThaw (V_Offset v) = MV_Offset <$> VG.basicUnsafeThaw v
-    {-# INLINE basicUnsafeThaw #-}
-
-    basicLength (V_Offset v) = VG.basicLength v
-    {-# INLINE basicLength #-}
-
-    basicUnsafeSlice ix len (V_Offset v) =
-        V_Offset $ VG.basicUnsafeSlice ix len v
-    {-# INLINE basicUnsafeSlice #-}
-
-    basicUnsafeIndexM (V_Offset v) ix = Offset <$> VG.basicUnsafeIndexM v ix
-    {-# INLINE basicUnsafeIndexM #-}
-
-instance Unbox Offset where

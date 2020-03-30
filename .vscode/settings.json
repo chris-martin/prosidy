@@ -13,5 +13,6 @@
         "**/.env/**": true,
         "**/dist/**": true,
         "**/dist-newstyle/**": true
-    }
+    },
+    "hic.arguments": "--lsp --cwd src"
 }
