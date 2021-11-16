@@ -6,26 +6,17 @@ jobs:
 
   build:
     name: Build and test all the packages
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
         ghc:
-          - '8.10.1'
-          - '8.8.1'
-          - '8.6.3'
-
-        aeson: ['-any']
-        megaparsec: ['-any']
-        prettyprinter: ['-any']
-        profunctors: ['-any']
-
-        include:
-          - ghc: '8.10.1'
-            aeson: '== 1.5.6.0'
-            megaparsec: '== 9.0.1'
-            prettyprinter: '== 1.7.0'
-            profunctors: '== 5.6.2'
+          - '8.10'
+          - '8.8'
+          - '8.6'
 
     steps:
       - uses: actions/checkout@v2
@@ -36,19 +27,13 @@ jobs:
           path: |
             ~/.cabal/packages
             ~/.cabal/store
-          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('**/*.cabal') }}
-          restore-keys: |
-              ${{ runner.os }}-${{ matrix.ghc }}-
-              ${{ runner.os }}-
+          key: ${{ runner.os }}-${{ matrix.ghc }}
 
       - uses: haskell/actions/setup@v1
         with:
           ghc-version: ${{ matrix.ghc }}
 
       - name: Test
-        run: >
-            cabal test
-            --constraint='aeson ${{matrix.aeson}}'
-            --constraint='megaparsec ${{matrix.megaparsec}}'
-            --constraint='prettyprinter ${{matrix.prettyprinter}}'
-            --constraint='profunctors ${{matrix.profunctors}}'
+        run: runhaskell --ghc-arg='-package process' ./.github/workflows/test.hs
+        env:
+          ghc: ${{ matrix.ghc }}
