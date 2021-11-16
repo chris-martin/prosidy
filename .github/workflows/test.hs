@@ -24,7 +24,13 @@ constraints ghc = catMaybes
           GHC_8_8  -> Just "4.13.*"
           GHC_8_10 -> Just "4.14.*"
     , "aeson" .= case ghc of
-          GHC_8_10 -> Just "1.5.6.0"
+          GHC_8_6  -> Just "1.4.*"
+          GHC_8_8  -> Just "1.5.*"
+          GHC_8_10 -> Just "2.0.*"
+          _        -> Nothing
+    , "hashable" .= case ghc of
+          GHC_8_8  -> Just "1.3.*"
+          GHC_8_10 -> Just "1.4.*"
           _        -> Nothing
     , "megaparsec" .= case ghc of
           GHC_8_10 -> Just "9.0.1"

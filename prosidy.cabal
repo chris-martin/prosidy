@@ -66,12 +66,12 @@ library
     build-depends:
         base                  >= 4.11 && < 5
       , base-compat-batteries >= 0.11 && < 0.12
-      , aeson                 >= 1.4  && < 1.6
+      , aeson                 >= 1.4  && < 2.1
       , bytestring            >= 0.10 && < 0.11
       , binary                >= 0.8  && < 0.9
       , containers            >= 0.6  && < 0.7
       , deepseq               >= 1.4  && < 1.5
-      , hashable              >= 1.2  && < 1.4
+      , hashable              >= 1.2  && < 1.5
       , megaparsec            >= 7.0  && < 9.1
       , prettyprinter         >= 1.6  && < 1.8
       , profunctors           >= 5.3  && < 5.7
@@ -97,7 +97,8 @@ test-suite prosidy-test
     other-modules:
         Prosidy.Test.Source
       , Prosidy.Test.Types
-      , Prosidy.Test.Parse
+      -- Disabled temporarily until aeson-diff is updated for the latest aeson version
+      -- , Prosidy.Test.Parse
       , Paths_prosidy
 
     autogen-modules:
@@ -106,9 +107,9 @@ test-suite prosidy-test
     build-depends:
         base
       , prosidy
-      , aeson             >= 1.4  && < 1.6
+      , aeson             >= 1.4  && < 2.1
       , aeson-pretty      >= 0.8  && < 0.9
-      , aeson-diff        >= 1.1  && < 1.2
+      -- , aeson-diff        >= 1.1  && < 1.2
       , bytestring        >= 0.10 && < 0.11
       , containers        >= 0.6  && < 0.7
       , directory         >= 1.3  && < 1.4

@@ -12,7 +12,15 @@ module Prosidy.Internal.JSON () where
 
 import           Prosidy.Internal.Classes
 import           Prosidy.Types
-import           Data.Aeson
+import Data.Aeson
+    ( pairs,
+      (.:),
+      withObject,
+      withText,
+      object,
+      FromJSONKeyFunction(FromJSONKeyTextParser),
+      Value(Null),
+      KeyValue((.=)) )
 import qualified Data.HashMap.Strict           as HM
 import           Data.Text                      ( Text )
 import           Control.Exception              ( displayException )
