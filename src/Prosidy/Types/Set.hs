@@ -9,7 +9,6 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE Safe #-}
 module Prosidy.Types.Set (Set(..), asHashSet, fromHashSet, toHashSet) where
 
 import           Prosidy.Internal.Classes

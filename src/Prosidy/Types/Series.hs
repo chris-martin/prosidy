@@ -9,7 +9,6 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE Safe #-}
 module Prosidy.Types.Series
     ( -- * Possibly empty collections
       Series(..)

@@ -1,11 +1,10 @@
 {-|
 Module      : Prosidy.Types
-Description : A convenience module which reëxports type definitions & helpers. 
+Description : A convenience module which reëxports type definitions & helpers.
 Copyright   : ©2020 James Alexander Feldman-Crough
 License     : MPL-2.0
 Maintainer  : alex@fldcr.com
 -}
-{-# LANGUAGE Safe #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveFunctor #-}
@@ -102,7 +101,7 @@ instance Pretty Document where
     pretty (Document md ct) = PP.nest 4 . PP.vsep $ [pretty md, pretty ct]
 
 -- | Convert a 'Document' to a 'Region'. The resulting 'Region' will never have
--- a 'Location' attached. 
+-- a 'Location' attached.
 documentToRegion :: Document -> Region (Series Block)
 documentToRegion (Document md ct) = Region md ct Nothing
 
@@ -148,7 +147,7 @@ instance Pretty Inline where
     pretty (InlineText f  ) = pretty f
 
 -------------------------------------------------------------------------------
--- | A set of properties and settings, associated with a 'Region'. 
+-- | A set of properties and settings, associated with a 'Region'.
 --
 -- The namespaces of properties and settings are distinct; a property can share
 -- a name with a setting without conflict.
@@ -222,7 +221,7 @@ instance Pretty a => Pretty (Tag a) where
     pretty (Tag name md ct _) =
         PP.nest 4 $ PP.vsep [pretty name, pretty md, pretty ct]
 
--- | A 'Tag' containing zero or more 'Block' items. 
+-- | A 'Tag' containing zero or more 'Block' items.
 -- Specified in Prosidy source with the @#-@ sigil.
 type BlockTag = Tag (Series Block)
 

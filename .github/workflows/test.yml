@@ -1,23 +1,16 @@
-on: [push, pull_request]
+on: [push]
 
 name: Test
 
 jobs:
-
   build:
-    name: Test
+    name: Build and test all the packages
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-        ghc:
-          - '9.0'
-          - '8.10'
-          - '8.8'
-          - '8.6'
+        ghc: ['8.10', '9.0', '9.2', '9.4']
+        os: ['ubuntu-latest']
 
     steps:
       - uses: actions/checkout@v2
@@ -28,13 +21,17 @@ jobs:
           path: |
             ~/.cabal/packages
             ~/.cabal/store
-          key: ${{ runner.os }}-${{ matrix.ghc }}
+          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('**/*.cabal', 'configurations/ghc-${{ matrix.ghc }}.project') }}
+          restore-keys: |
+              ${{ runner.os }}-${{ matrix.ghc }}-
+              ${{ runner.os }}-
 
-      - uses: haskell/actions/setup@v1
+      - uses: haskell/actions/setup@v2
         with:
           ghc-version: ${{ matrix.ghc }}
 
+      - name: Build
+        run: cabal build all --project-file ./configurations/ghc-${{ matrix.ghc }}.project
+
       - name: Test
-        run: runhaskell --ghc-arg='-package process' ./.github/workflows/test.hs
-        env:
-          ghc: ${{ matrix.ghc }}
+        run: cabal test all --enable-tests --project-file ./configurations/ghc-${{ matrix.ghc }}.project

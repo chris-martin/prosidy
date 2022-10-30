@@ -7,7 +7,6 @@ Maintainer  : alex@fldcr.com
 -}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TupleSections #-}
-{-# LANGUAGE Safe #-}
 module Prosidy.Optics.Internal
     ( module Prosidy.Optics.Internal
     , Profunctor(..)

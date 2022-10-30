@@ -1,0 +1,4 @@
+packages: prosidy.cabal
+
+constraints:
+    base == 4.15.*

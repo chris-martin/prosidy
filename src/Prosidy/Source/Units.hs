@@ -10,7 +10,6 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE Safe #-}
 module Prosidy.Source.Units (Line(..), Column(..), Offset(..)) where
 
 import           Prosidy.Internal.Classes

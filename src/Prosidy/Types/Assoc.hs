@@ -5,7 +5,6 @@ Copyright   : ©2020 James Alexander Feldman-Crough
 License     : MPL-2.0
 Maintainer  : alex@fldcr.com
 -}
-{-# LANGUAGE Safe #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE OverloadedStrings #-}

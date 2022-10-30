@@ -10,7 +10,6 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData #-}
-{-# LANGUAGE Safe #-}
 module Prosidy.Source
     ( Source(..)
     , Location
@@ -71,7 +70,7 @@ instance Pretty Source where
     pretty = pretty . sourceName
 
 -- | Create a 'Source' from a descriptive name and a body. The source name is
--- typically a 'FilePath', but this is not guarenteed. For instance, when read 
+-- typically a 'FilePath', but this is not guarenteed. For instance, when read
 -- from standard-input, Prosidy chooses to name the source @\<stdin\>@.
 makeSource :: String -> Text -> Source
 makeSource name body = Source name body lineMap
@@ -127,7 +126,7 @@ instance Pretty Location where
     pretty loc = pretty (locationSource loc) PP.<+> "@" PP.<+> mconcat
         [pretty (locationLine loc), "×", pretty (locationColumn loc)]
 
--- | Add lazily computed line and column number information to a 
+-- | Add lazily computed line and column number information to a
 -- 'SparseLocation'.
 enrichLocation :: SparseLocation -> Location
 enrichLocation sl = Location { locationSource = source

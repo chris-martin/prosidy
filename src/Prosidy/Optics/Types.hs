@@ -8,10 +8,9 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE LambdaCase   #-}
 {-# LANGUAGE RankNTypes   #-}
 {-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE Safe #-}
 module Prosidy.Optics.Types
     ( -- * Classy optics
-      -- ** Items with 'Metadata' 
+      -- ** Items with 'Metadata'
       HasMetadata(..)
     , properties
     , settings
@@ -32,7 +31,7 @@ module Prosidy.Optics.Types
     , _InlineTag
     , _Text
     , _Break
-      -- * Optics on common types 
+      -- * Optics on common types
     , key
     , _Assoc
     , _NonEmpty
@@ -209,7 +208,7 @@ _Break = prism' (const Break) $ \case
     _     -> Nothing
 
 -------------------------------------------------------------------------------
--- | A Prism from 'Text' into a valid 'Key'. 
+-- | A Prism from 'Text' into a valid 'Key'.
 key :: Prism' Text Key
 key = prism' rawKey (either (const Nothing) Just . makeKey)
 {-# INLINE key #-}

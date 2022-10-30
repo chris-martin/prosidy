@@ -8,7 +8,6 @@ Maintainer  : alex@fldcr.com
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE Safe #-}
 module Prosidy.Types.Key
     ( -- * The 'Key' type.
       Key
@@ -16,7 +15,7 @@ module Prosidy.Types.Key
     , makeKey
     , rawKey
     , unsafeMakeKey
-      -- * Checking validity of raw text. 
+      -- * Checking validity of raw text.
     , isValidKeyHead
     , isValidKeyTail
       -- * Errors
@@ -45,7 +44,7 @@ newtype Key = Key Text
   deriving (Binary, Eq, Hashable, NFData, Ord, ToJSON, ToJSONKey) via Text
 
 -- | 'Key' exposes an 'IsString' instance, but beware! Invalid strings will
--- throw a pure exception. 
+-- throw a pure exception.
 instance IsString Key where
     fromString = either throw id . makeKey . Text.pack
 
@@ -83,7 +82,7 @@ unsafeMakeKey = Key
 rawKey :: Key -> Text
 rawKey (Key key) = key
 
--- | Check if a character is suitable for use as the first character in a 
+-- | Check if a character is suitable for use as the first character in a
 -- 'Key'.
 isValidKeyHead :: Char -> Bool
 isValidKeyHead = (||) <$> Char.isAlphaNum <*> (== '_')
