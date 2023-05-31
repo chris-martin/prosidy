@@ -1,7 +1,0 @@
-packages: prosidy.cabal
-
-constraints:
-    aeson == 2.1.*
-  , base == 4.17.*
-  , text == 2.0.*
-  , vector == 0.13.*
